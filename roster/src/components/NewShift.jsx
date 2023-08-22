@@ -24,9 +24,11 @@ const NewShift = ({ addShift }) => {
 
     const newShift = {
       employee,
+      // Start Details
       startDate,
       startTime,
       start,
+      // End Details
       endDate,
       endTime,
       end,
@@ -51,7 +53,7 @@ const NewShift = ({ addShift }) => {
         {/* Other input fields */}
         {/* Employee Field */}
         <label for="exampleFormControlInput1" className="form-label">Select Employee</label>
-              <input value={employee} onChange= {e => setEmployee(e.target.value)} className="form-control form-control-lg" type="text" placeholder="John Doe" aria-label=".form-control-lg example" required/>
+              <input value={employee} onChange= {e => setEmployee(e.target.value)} className="form-control form-control-lg" type="text" placeholder="John Doe" aria-label=".form-control-lg example" required default='Arda'/>
           
         {/* Shift Start */}
         <label for="startTimeInput" className="form-label">Shift Start</label>

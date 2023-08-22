@@ -30,7 +30,7 @@ const Roster = ({ shifts }) => {
   });
 //Calendar Render
   return (
-    <div>
+    <div className='z-0'>
       <section>
         <h2 align='center'>Roster</h2>
         <Link to='/shift/new'>Add New Shift</Link>

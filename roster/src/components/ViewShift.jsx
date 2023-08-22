@@ -8,6 +8,7 @@ const ViewShift = ({ shift }) => {
     <h4> Shift Start: {shift.startTime} </h4>
     <h4> Shift End: {shift.endTime} </h4>
     <h4> Break: {shift.pause} </h4>
+
     </>) : (
     <h4>Shift not Found!</h4>
   )

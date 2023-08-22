@@ -9,6 +9,12 @@ import NewEmployee from './NewEmployee';
 import ViewEmployee from './ViewEmployee';
 import Addshift from './NewShift';
 
+
+const seedShifts =
+[
+  { index: 0, employee: "Arda", startDate: "2023-08-24", startTime: "17:10", start: 'Thu Aug 24 2023 17:10:00 GMT+1000 (Australian Eastern Standard Time', endDate: "2023-08-24", endTime: "22:00", end: 'Thu Aug 24 2023 22:00:00 GMT+1000 (Australian Eastern Standard Time', pause: "30" }
+]
+
 //Seed Employee Data
 const seedEmployees = [
   {name: "Arda", email:"abc123@coderacademy.edu.au", phone: "0412391252", dob: "10/05/1997", wage: "Test1", contract: "Full Time" },
@@ -27,7 +33,7 @@ const App = () => {
   };
 
   // Define useState for Shifts here to allow access by all other components
-  const [shifts, setShifts] = useState([]); //remove seedShifts after testing
+  const [shifts, setShifts] = useState(seedShifts); //remove seedShifts after testing
 
   const addShift = (newShift) => {
     setShifts(CurrentShifts => [...CurrentShifts, newShift]);
