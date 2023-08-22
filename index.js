@@ -21,11 +21,14 @@ const employeesSchema = new mongoose.Schema({
     // email with no whitespaces, lowercase and unique
         type: String, trim: true, lowercase: true, unique: true,
         validate: {
+          // validator function tests the email for the correct formatting  
             validator: function(v) {
               return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v)
             },
+            // if it returns false, this message will be displayed
             message: "Please enter a valid email"
         },
+        // if email isnt provided, the error message will be displayed
         required: [true, "Email required"]
         },
   phone:{ type: Number, required: true },
@@ -43,28 +46,39 @@ app.use(express.json())
 
 app.get('/', (req, res) => res.send({ name: ""}))
 
+// get request to the employees page will return the list of employees 
 app.get('/employees', async (req, res) => res.send(await EmployeeModel.find()))
 
+// get request to get an employee by id
 app.get('/employees/:id', async (req, res) => {
   try {
+    // storing an employee found by id from an employee model in a variable "employee"
     const employee = await EmployeeModel.findById(req.params.id)
+    // if employee is found
     if (employee) {
+      // respond with an employee object
       res.send(employee)
+      // if employee is not found, display an error message with a status code 404
     } else {
       res.status(404).send({ error: 'Employee not found' })
     }
   }
+  // if the try block fails
   catch(err){
+    // respond with a status code 500, displaying an error message
     res.status(500).send({ error: err.message })
   }
 })
-
+//  creating a new employee with a post method
 app.post('/employees', async (req, res) => {
   try {
+    // storing a new employee object in a variable "newEmployee"
     const newEmployee = await EmployeeModel.create(req.body)
+    // responding with a new employee object
     res.send(newEmployee)
   }
   catch(err){
+    // respond with a status code 500, displaying an error message in case it fails
     res.status(500).send({ error: err.message })
   }
 })
