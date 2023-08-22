@@ -8,11 +8,11 @@ const employees = [
   {name: "Carlie", email:"carlie@gmail.com", phone: "7569315", dob: "1/05/1975", wage: 4000.0}
 ]
 
-mongoose.connect('mongodb+srv://developer:codernewapp@cluster0.sguzlt4.mongodb.net/?retryWrites=true&w=majority')
+mongoose.connect('mongodb+srv://developer:codernewapp@cluster0.sguzlt4.mongodb.net/scheduling-app?retryWrites=true&w=majority')
   .then(m => console.log(m.connection.readyState === 1 ? 'Mongoose connected' : 'Mongoose failed'))
   .catch(err => console.error(err))
 
-  
+
 //  employees schema with the validation rules for the fields
 // defining the structure of the model Employee
 const employeesSchema = new mongoose.Schema({
@@ -29,8 +29,8 @@ const employeesSchema = new mongoose.Schema({
         required: [true, "Email required"]
         },
   phone:{ type: Number, required: true },
-  dob: { type: Date, required: true }, 
-  wage: { type: mongoose.Schema.Types.Decimal128, required: true }
+  dob: { type: String, required: true }, 
+  wage: { type: Number, required: true }
 })
 
 // creating a model based on the employees schema
@@ -41,27 +41,32 @@ const port = 4001
 
 app.use(express.json())
 
-app.get('/', (req, res) => res.send({ name: "Damira"}))
+app.get('/', (req, res) => res.send({ name: ""}))
 
-app.get('/employees', (req, res) => res.send(employees))
+app.get('/employees', async (req, res) => res.send(await EmployeeModel.find()))
 
-app.get('/employees/:id', (req, res) => {
-  const employee = employees[req.params.id]
-  if (employee) {
-    res.send(employee)
-  } else {
-    res.status(404).send({ error: 'Employee not found' })
+app.get('/employees/:id', async (req, res) => {
+  try {
+    const employee = await EmployeeModel.findById(req.params.id)
+    if (employee) {
+      res.send(employee)
+    } else {
+      res.status(404).send({ error: 'Employee not found' })
+    }
+  }
+  catch(err){
+    res.status(500).send({ error: err.message })
   }
 })
 
-app.post('/employees', (req, res) => {
-  // 1. retrieve the data from the request 
-  console.log(req.body)
-  // 2. TODO: parse/validate it 
-  // 3. Push the new entry to the entries array 
-  employees.push(req.body)
-  // 4. send the new entry with 201 status
-  res.send(req.body)
+app.post('/employees', async (req, res) => {
+  try {
+    const newEmployee = await EmployeeModel.create(req.body)
+    res.send(newEmployee)
+  }
+  catch(err){
+    res.status(500).send({ error: err.message })
+  }
 })
 
 
