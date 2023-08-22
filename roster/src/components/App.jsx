@@ -9,16 +9,11 @@ import NewEmployee from './NewEmployee';
 import ViewEmployee from './ViewEmployee';
 import Addshift from './NewShift';
 
-const seedShifts = [
-  {employee: "Test1", Date:"10/05/1997", start: "Test1", end: "Test1", pause: "Test1" },
-  {employee: "Test2", Date:"10/05/1997", start: "Test2", end: "Test2", pause: "Test2" },
-  {employee: "Test3", Date:"10/05/1997", start: "Test3", end: "Test3", pause: "Test3" }
-]
-
+//Seed Employee Data
 const seedEmployees = [
-  {name: "Test1", email:"10/05/1997", phone: "Test1", dob: "Test1", wage: "Test1", contract: "Full Time" },
-  {name: "Test2", email:"10/05/1997", phone: "Test2", dob: "Test2", wage: "Test2", contract: "Full Time" },
-  {name: "Test3", email:"10/05/1997", phone: "Test3", dob: "Test3", wage: "Test3", contract: "Full Time" },
+  {name: "Arda", email:"abc123@coderacademy.edu.au", phone: "0412391252", dob: "10/05/1997", wage: "Test1", contract: "Full Time" },
+  {name: "Damira", email:"abc123@coderacademy.edu.au", phone: "0413597278", dob: "20/07/2001", wage: "Test2", contract: "Full Time" },
+  {name: "Pixel", email:"abc123@coderacademy.edu.au", phone: "0413992960", dob: "11/01/1999", wage: "Test3", contract: "Full Time" },
 ]
 
 
@@ -32,14 +27,14 @@ const App = () => {
   };
 
   // Define useState for Shifts here to allow access by all other components
-  const [shifts, setShifts] = useState(seedShifts); //remove seedShifts after testing
+  const [shifts, setShifts] = useState([]); //remove seedShifts after testing
 
   const addShift = (newShift) => {
     setShifts(CurrentShifts => [...CurrentShifts, newShift]);
   };
 
 
-
+// ALlow Routes to Access ID variables from Shifts & Employees
 function ShowShiftWrapper() {
   const { id } = useParams()
   return <ViewShift shift={shifts[id]}/>
@@ -63,7 +58,7 @@ function ShowEmployeeWrapper() {
           <Route path='/employees/new' element={<NewEmployee addEmployee={addEmployee} />}/>
         <Route path='/employee/:id' element={<ShowEmployeeWrapper />} />
         
-        {/* Roster & Shifts Path */}
+        {/* Roster & Shift Paths */}
         <Route path='/roster' element={<Roster shifts={shifts} />} />
         <Route path='/shift/new' element={<Addshift addShift={addShift}/>} />
         <Route path='/shift/:id' element={<ShowShiftWrapper /> } />

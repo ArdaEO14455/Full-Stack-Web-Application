@@ -1,30 +1,49 @@
 import React from 'react'
-import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom'
+import { Calendar, momentLocalizer } from 'react-big-calendar'
+import moment from 'moment'
+import 'react-big-calendar/lib/css/react-big-calendar.css'
+
+const localizer = momentLocalizer(moment);
 
 const Roster = ({ shifts }) => {
-  return ( <>
-    <h3>Roster</h3>
-      <Link to='/shift/new'>Add New Shift</Link>
-      <ul>
-        
-        {shifts.map((shift, index) => (
-          <li key={index}>
-            <h4><Link to={`/shift/${index}`}>{shift.employee}</Link></h4>
-            <ul>
-                <li>Date: {shift.date}</li>
-                <li>Shift Start Time: {shift.start}</li>
-                <li>Shift End Time: {shift.end}</li>
-                <li>Break: {shift.pause}</li>
-            </ul>
-    
-          </li>
-        ))}
-      </ul>
+  // Transform seedShifts to match react-big-calendar event format
+  const events = shifts.map((shift, index) => {
+    const startTime = moment(shift.start).toDate(); // Parse start time
+    const endTime = moment(shift.end).toDate();     // Parse end time
 
-  </>)
-}
+    // Calendar Event
+    return {
+      title: (
+        <figure align='center'>
+          <Link to = {`/shift/${index}`}>
+          {shift.employee}<br />
+          Shift: {moment(startTime).format('h:mma')} - {moment(endTime).format('h:mma')} <br />
+          Break: {shift.pause}
+          </Link>
+        </figure>
+      ),
+      start: startTime,
+      end: endTime,
+      key: index
+    };
+  });
+//Calendar Render
+  return (
+    <div>
+      <section>
+        <h2 align='center'>Roster</h2>
+        <Link to='/shift/new'>Add New Shift</Link>
+      </section>
+      <Calendar
+        localizer={localizer}
+        events={events}  // Use the transformed events
+        startAccessor="start"
+        endAccessor="end"
+        style={{ height: 800 }} // Set the calendar height
+      />
+    </div>
+  );
+};
 
-
-export default Roster
-
-
+export default Roster;
