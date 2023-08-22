@@ -33,11 +33,24 @@ const employeesSchema = new mongoose.Schema({
         },
   phone:{ type: Number, required: true },
   dob: { type: String, required: true }, 
-  wage: { type: Number, required: true }
+  wage: { type: Number, required: true },
+  shifts: [{ type: Schema.Types.ObjectId, ref: 'Shift' }]
 })
 
 // creating a model based on the employees schema
 const EmployeeModel = mongoose.model('Employee', employeesSchema)
+
+// creating a new shift schema 
+const shiftSchema = new mongoose.Schema({
+  // referencing an employee if from employee model
+  employeeId: { type: Schema.Types.ObjectId, ref: 'Employee', required: true }, 
+  date: { type: Date, required: true },
+  start: { type: String, required: true },
+  end: { type: String, required: true },
+  pause: { type: Number, required: true }
+})
+
+const Shift = mongoose.model('Shift', shiftSchema)
 
 const app = express()
 const port = 4001 
@@ -82,6 +95,8 @@ app.post('/employees', async (req, res) => {
     res.status(500).send({ error: err.message })
   }
 })
+
+
 
 
 app.listen(port)
