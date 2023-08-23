@@ -4,12 +4,12 @@ import { dbClose } from './db.js'
 
 // declaring a variable "shifts" that will store objects containing date, start, end and pause properties in each
 const shifts = [
-{ date: '2023-08-21', start: '09:00', end: '17:00', pause: 30 },
-{ date: '2023-08-22', start: '10:00', end: '18:00', pause: 60 },
-{ date: '2023-08-21', start: '11:00', end: '19:00', pause: 30 },
-{ date: '2023-08-22', start: '15:00', end: '23:00', pause: 60 },
-{ date: '2023-08-23', start: '09:00', end: '17:00', pause: 30 },
-{ date: '2023-08-24', start: '10:00', end: '18:00', pause: 60 }
+{ date: '21/08/2023', start: '09:00', end: '17:00', pause: 30 },
+{ date: '22/08/2023', start: '10:00', end: '18:00', pause: 60 },
+{ date: '21/08/2023', start: '11:00', end: '19:00', pause: 30 },
+{ date: '23/08/2023', start: '15:00', end: '23:00', pause: 60 },
+{ date: '23/08/2023', start: '09:00', end: '17:00', pause: 30 },
+{ date: '24/08/2023', start: '10:00', end: '18:00', pause: 60 }
 ]
 //  deleting the documents from the Shift collection
 await ShiftModel.deleteMany()

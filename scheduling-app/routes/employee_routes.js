@@ -13,7 +13,7 @@ router.get('/:id', async (req, res) => {
   try {
     // storing an employee found by id from an employee model in a variable "employee"
     // populating the employee object with the documents from Shift collection
-    const employee = await EmployeeModel.findById(req.params.id).populate('shifts')
+    const employee = await EmployeeModel.findById(req.params.id).populate({path: 'shifts', select: '-_id'})
     // if employee is found
     if (employee) {
       // respond with an employee object
