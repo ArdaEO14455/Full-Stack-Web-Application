@@ -1,6 +1,5 @@
 import mongoose from 'mongoose'
 import moment from 'moment'
-import { ShiftModel } from './ShiftModel.js'
 
 //  employees schema with the validation rules for the fields
 // defining the structure of the model Employee
@@ -35,7 +34,17 @@ const employeesSchema = new mongoose.Schema({
   },
   wage: { type: Number, required: true },
   // accesssing the object id directly from mongodb
-  shifts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Shift' }]
+  shifts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Shift' }], 
+  contract: {
+    type: String,
+    required: true,
+    validate: {
+      validator: function(v) {
+        return ['full-time', 'part-time', 'casual'].includes(v.toLowerCase())
+      },
+      message: 'Contract type must be full-time, part-time  or casual'
+    }
+  }
 })
 
 // creating a model based on the employees schema
