@@ -50,7 +50,7 @@ const employeesSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator: function(v) {
-        // checking if the date format is valid
+        // checking if the date format is valid with moment library
         return moment(v, 'YYYY-MM-DD').isValid()
       },
       // if it returns false, the message below will be displayed
