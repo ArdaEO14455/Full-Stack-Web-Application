@@ -1,70 +1,13 @@
 import express from 'express'
-import mongoose from 'mongoose'
-import moment from 'moment'
+import { ShiftModel } from './ShiftModel.js'
+import { EmployeeModel } from './EmployeeModel.js'
+import './db.js'
 
-
-const employees = [
-  {name: "John", email:"john@gmail.com", phone: "2113143234", dob: "13/10/1980", wage: 2000.0, shifts: []},
-  {name: "Michael", email:"michael@gmail.com", phone: "85469304", dob: "23/08/1995", wage: 1500.0, shifts: []},
-  {name: "Carlie", email:"carlie@gmail.com", phone: "7569315", dob: "1/05/1975", wage: 4000.0, shifts: []}
-]
-
-mongoose.connect('mongodb+srv://developer:codernewapp@cluster0.sguzlt4.mongodb.net/scheduling-app?retryWrites=true&w=majority')
-  .then(m => console.log(m.connection.readyState === 1 ? 'Mongoose connected' : 'Mongoose failed'))
-  .catch(err => console.error(err))
-
-
-// creating a new shift schema 
-const shiftsSchema = new mongoose.Schema({
-  // accesssing the object id directly from mongodb
-  employeeId: { type: mongoose.Schema.Types.ObjectId, ref: 'Employee', required: true }, 
-  date: { type: Date, required: true },
-  start: { type: String, required: true },
-  end: { type: String, required: true },
-  pause: { type: Number, required: true }
-})
-
-const ShiftModel = mongoose.model('Shift', shiftsSchema)
-
-//  employees schema with the validation rules for the fields
-// defining the structure of the model Employee
-const employeesSchema = new mongoose.Schema({
-  name: { type: String, required: true },
-  email: {
-    // email with no whitespaces, lowercase and unique
-        type: String, trim: true, lowercase: true, unique: true,
-        validate: {
-          // validator function tests the email for the correct formatting  
-            validator: function(v) {
-              return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v)
-            },
-            // if it returns false, this message will be displayed
-            message: "Please enter a valid email"
-        },
-        // if email isnt provided, the error message will be displayed
-        required: [true, "Email required"]
-        },
-  phone:{ type: Number, required: true },
-  dob: {
-    type: String,
-    required: true,
-    validate: {
-      validator: function(v) {
-        // checking if the date format is valid with moment library
-        return moment(v, 'YYYY-MM-DD').isValid()
-      },
-      // if it returns false, the message below will be displayed
-      message: 'DOB must be in the format YYYY-MM-DD',
-    },
-  },
-  wage: { type: Number, required: true },
-  // accesssing the object id directly from mongodb
-  shifts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Shift' }]
-})
-
-// creating a model based on the employees schema
-const EmployeeModel = mongoose.model('Employee', employeesSchema)
-
+// const employees = [
+//   {name: "John", email:"john@gmail.com", phone: "2113143234", dob: "13/10/1980", wage: 2000.0, shifts: []},
+//   {name: "Michael", email:"michael@gmail.com", phone: "85469304", dob: "23/08/1995", wage: 1500.0, shifts: []},
+//   {name: "Carlie", email:"carlie@gmail.com", phone: "7569315", dob: "1/05/1975", wage: 4000.0, shifts: []}
+// ]
 
 const app = express()
 const port = 4001 
@@ -114,7 +57,8 @@ app.post('/employees', async (req, res) => {
 app.put('/employees/:id', async (req, res) => {
   try {
     // find an employee by id (without the shift details) and update it
-    const employee = await EmployeeModel.findByIdAndUpdate(req.params.id, req.body, { new: true }).select('-shifts')
+    // validating the incoming data with the runValidators property 
+    const employee = await EmployeeModel.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true }).select('-shifts')
     // if employee is found
     if (employee) {
       // respond with an employee object
@@ -136,6 +80,7 @@ app.delete('/employees/:id', async (req, res) => {
     const employee = await EmployeeModel.findByIdAndDelete(req.params.id)
     // if employee is found
     if (employee) {
+      // respond with a status code 200
       res.sendStatus(200)
       // if employee is not found, display an error message with a status code 404
     } else {
