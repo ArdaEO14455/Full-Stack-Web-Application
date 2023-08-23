@@ -19,7 +19,8 @@ const shiftsSchema = new mongoose.Schema({
   }},
   start: { type: String, required: true },
   end: { type: String, required: true },
-  pause: { type: Number, required: true }
+  pause: { type: Number, required: true },
+  employee: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Employee' }]
 })
 
 const ShiftModel = mongoose.model('Shift', shiftsSchema)
