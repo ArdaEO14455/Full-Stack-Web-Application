@@ -25,7 +25,10 @@ const employeesSchema = new mongoose.Schema({
     required: true,
     validate: {
       validator: function(v) {
-        // checking if the date format is valid with moment library
+        // checking if the date format is valid with "moment" library
+        // moment function will parse and validate the incoming value (date)
+        // accoring to the format provided as the second parameter
+        //  isValid method will return a boolean value indicating whether the date adheres to the format
         return moment(v, 'DD-MM-YYYY').isValid()
       },
       // if it returns false, the message below will be displayed
@@ -33,15 +36,17 @@ const employeesSchema = new mongoose.Schema({
     },
   },
   wage: { type: Number, required: true },
-  // accesssing the object id directly from mongodb
+  // accesssing the object id directly from mongodb, from the Shift collection
   shifts: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Shift' }], 
   contract: {
     type: String,
     required: true,
     validate: {
       validator: function(v) {
+        // comparing the incoming value to see if it is in the array, and making the value case insensitive
         return ['full-time', 'part-time', 'casual'].includes(v.toLowerCase())
       },
+      //  in case it returns false, the below message will be displayed
       message: 'Contract type must be full-time, part-time  or casual'
     }
   }

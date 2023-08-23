@@ -1,14 +1,15 @@
 import { Router } from 'express'
 import { EmployeeModel } from '../EmployeeModel.js'
+import { ShiftModel } from '../ShiftModel.js'
 
 // creating a new router object
 const router = Router()
 
 // get request to the employees page will return the list of employees 
-router.get('/employees', async (req, res) => res.send(await EmployeeModel.find().select('-shifts')))
+router.get('/', async (req, res) => res.send(await EmployeeModel.find().select('-shifts')))
 
 // get request to get an employee by id
-router.get('/employees/:id', async (req, res) => {
+router.get('/:id', async (req, res) => {
   try {
     // storing an employee found by id from an employee model in a variable "employee"
     // populating the employee object with the documents from Shift collection
@@ -30,7 +31,7 @@ router.get('/employees/:id', async (req, res) => {
 })
 
 //  creating a new employee with a post method
-router.post('/employees', async (req, res) => {
+router.post('/', async (req, res) => {
   try {
     // storing a new employee object in a variable "newEmployee"
     const newEmployee = await EmployeeModel.create(req.body)
@@ -44,7 +45,7 @@ router.post('/employees', async (req, res) => {
 })
 
 //  a route to edit data of an individual employee
-router.put('/employees/:id', async (req, res) => {
+router.put('/:id', async (req, res) => {
   try {
     // find an employee by id (without the shift details) and update it
     // validating the incoming data with the runValidators property 
@@ -65,7 +66,7 @@ router.put('/employees/:id', async (req, res) => {
 })
 
 // deleting an employee by id
-router.delete('/employees/:id', async (req, res) => {
+router.delete('/:id', async (req, res) => {
   try {
     // find an employee by their id and delete it
     const employee = await EmployeeModel.findByIdAndDelete(req.params.id)
