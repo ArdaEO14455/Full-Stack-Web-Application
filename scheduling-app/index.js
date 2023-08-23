@@ -3,12 +3,6 @@ import { ShiftModel } from './ShiftModel.js'
 import { EmployeeModel } from './EmployeeModel.js'
 import './db.js'
 
-// const employees = [
-//   {name: "John", email:"john@gmail.com", phone: "2113143234", dob: "13/10/1980", wage: 2000.0, shifts: []},
-//   {name: "Michael", email:"michael@gmail.com", phone: "85469304", dob: "23/08/1995", wage: 1500.0, shifts: []},
-//   {name: "Carlie", email:"carlie@gmail.com", phone: "7569315", dob: "1/05/1975", wage: 4000.0, shifts: []}
-// ]
-
 const app = express()
 const port = 4001 
 
