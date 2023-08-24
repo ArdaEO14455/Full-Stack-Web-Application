@@ -1,17 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, } from 'react'
+import { useParams } from 'react-router-dom';
 import moment from 'moment';
+//CHANGE START
 
-const NewShift = ({ addShift }) => {
-  const [employee, setEmployee] = useState('');
-  const [startDate, setStartDate] = useState('');
-  const [startTime, setStartTime] = useState('');
-  const [endDate, setEndDate] = useState('');
-  const [endTime, setEndTime] = useState('');
-  const [pause, setPause] = useState('');
+
+const UpdateShift = ({ shift, updateShift, id} ) => {
+  const [employee, setEmployee] = useState(shift.employee);
+  const [startDate, setStartDate] = useState(shift.startDate);
+  const [startTime, setStartTime] = useState(shift.startTime);
+  const [endDate, setEndDate] = useState(shift.endDate);
+  const [endTime, setEndTime] = useState(shift.endTime);
+  const [pause, setPause] = useState(shift.pause);
+
 
   const submit = (e) => {
     e.preventDefault();
-
     // Combine date and time for start and end
     const start = moment(`${startDate} ${startTime}`, 'YYYY-MM-DD HH:mm').toDate();
 
@@ -22,7 +25,8 @@ const NewShift = ({ addShift }) => {
     }
     end = end.toDate();
 
-    const newShift = {
+    const updatedShift = {
+      id,
       employee,
       // Start Details
       startDate,
@@ -35,8 +39,8 @@ const NewShift = ({ addShift }) => {
       //Break
       pause,
     };
-    addShift(newShift);
-    console.log(newShift)
+    updateShift(updatedShift);
+    
 
     // Reset form fields
   //   setEmployee('');
@@ -46,18 +50,27 @@ const NewShift = ({ addShift }) => {
   //   setEndTime('');
   //   setPause('');
   };
+  
+  
+  return shift ? ( 
+  <>
+    <h5> Employee: {shift.employee}</h5>
+    <h5> Date: {shift.startDate}</h5>
+    <h4> Shift Start: {shift.startTime} </h4>
+    <h4> Shift End: {shift.endTime} </h4>
+    <h4> Break: {shift.pause} </h4>
 
-  return (
-    <>
-      <h1 className="row justify-content-center"
-      >New shift Details</h1>
+
+    <h1 className="row justify-content-center"
+      >Edit Shift</h1>
       <form className="container" 
       onSubmit={submit}
       >
         {/* Employee Field */}
         <label for="exampleFormControlInput1" className="form-label">Select Employee</label>
           <input 
-          value={employee} onChange= {e => setEmployee(e.target.value)} 
+          value= {employee}
+          onChange= {e => setEmployee(e.target.value)} 
           className="form-control form-control-lg" 
           type="text" 
           placeholder="John Doe" 
@@ -85,7 +98,9 @@ const NewShift = ({ addShift }) => {
           type="time"
           required
         />
-        {/* Shift End Field */}
+
+
+        {/* Shift End Fields */}
         {/* End Date */}
         <label for="endTimeInput" className="form-label">Shift End</label>
         <input
@@ -118,10 +133,22 @@ const NewShift = ({ addShift }) => {
           />
 
         {/* Submit Button */}
-        <button type="submit" className="btn btn-primary mt-3 container-lg">Add shift</button>
+        <button type="submit" className="btn btn-primary mt-3 container-lg">Update Shift</button>
       </form>
-    </>
-  );
-};
 
-export default NewShift;
+
+
+
+
+
+
+
+
+
+    </>) : (
+    <h4>Shift not Found!</h4>
+  )
+
+}
+
+export default UpdateShift

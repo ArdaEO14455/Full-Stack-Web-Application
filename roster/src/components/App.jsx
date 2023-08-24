@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Routes, Route, useParams } from 'react-router-dom';
 import Overview from './Overview';
-import ViewShift from './ViewShift';
+import UpdateShift from './UpdateShift';
 import NavBar from './NavBar';
 import Employees from './Employees';
 import Roster from './Roster';
@@ -9,10 +9,10 @@ import NewEmployee from './NewEmployee';
 import ViewEmployee from './ViewEmployee';
 import Addshift from './NewShift';
 
-
+// Seed Shift Data
 const seedShifts =
 [
-  { index: 0, employee: "Arda", startDate: "2023-08-24", startTime: "17:10", start: 'Thu Aug 24 2023 17:10:00 GMT+1000 (Australian Eastern Standard Time', endDate: "2023-08-24", endTime: "22:00", end: 'Thu Aug 24 2023 22:00:00 GMT+1000 (Australian Eastern Standard Time', pause: "30" }
+  { employee: "Arda", startDate: "2023-08-24", startTime: "17:10", start: 'Thu Aug 24 2023 17:10:00 GMT+1000 (Australian Eastern Standard Time)', endDate: "2023-08-24", endTime: "22:00", end: 'Thu Aug 24 2023 22:00:00 GMT+1000 (Australian Eastern Standard Time', pause: "30" }
 ]
 
 //Seed Employee Data
@@ -39,12 +39,26 @@ const App = () => {
     setShifts(CurrentShifts => [...CurrentShifts, newShift]);
   };
 
+  const updateShift = (updatedShift) => {
+    console.log(shifts)
+    console.log(updatedShift)
+    setShifts((shifts) => {
+      return shifts.map((shift, index) =>
+        index = updatedShift.id ? updatedShift : shift
+      );
+    });
+  };
 
-// ALlow Routes to Access ID variables from Shifts & Employees
+
+// ALlow Routes to Access ID variables from Shifts
 function ShowShiftWrapper() {
   const { id } = useParams()
-  return <ViewShift shift={shifts[id]}/>
+  const shift_id = id
+  const selectedshift = shifts[id]
+  return <UpdateShift shift={selectedshift} updateShift={updateShift} id={shift_id}/>
 }
+
+// ALlow Routes to Access ID variables from Employees
 function ShowEmployeeWrapper() {
   const { id } = useParams()
   return <ViewEmployee employee={employees[id]}/>
@@ -67,7 +81,7 @@ function ShowEmployeeWrapper() {
         {/* Roster & Shift Paths */}
         <Route path='/roster' element={<Roster shifts={shifts} />} />
         <Route path='/shift/new' element={<Addshift addShift={addShift}/>} />
-        <Route path='/shift/:id' element={<ShowShiftWrapper /> } />
+        <Route path='/shift/:id' element={<ShowShiftWrapper shifts={shifts} updateShift={updateShift}/> } />
 
         {/* Catch-all for invalid URLs */}
         <Route path='*' element= {<h3>Page Not Found</h3>} /> 

@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom'
 import { Calendar, momentLocalizer } from 'react-big-calendar'
 import moment from 'moment'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
+//to change styling, find the above imported file under node modules
+
 
 const localizer = momentLocalizer(moment);
 
@@ -11,17 +13,14 @@ const Roster = ({ shifts }) => {
   const events = shifts.map((shift, index) => {
     const startTime = moment(shift.start).toDate(); // Parse start time
     const endTime = moment(shift.end).toDate();     // Parse end time
-
     // Calendar Event
     return {
       title: (
-        <figure align='center'>
-          <Link to = {`/shift/${index}`}>
+          <Link to = {`/shift/${index}`} className='text-black'>
           {shift.employee}<br />
           Shift: {moment(startTime).format('h:mma')} - {moment(endTime).format('h:mma')} <br />
           Break: {shift.pause}
           </Link>
-        </figure>
       ),
       start: startTime,
       end: endTime,
