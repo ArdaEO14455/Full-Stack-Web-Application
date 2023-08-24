@@ -5,6 +5,7 @@ const Employees = ({ employees }) => {
   return (
     <>
       <h1 align='center'>Employees</h1>
+      <Link to='/employee/new'>New Employee</Link>
       
     <table className="table table-striped table-primary table-hover">
       {/* Table Headers */}

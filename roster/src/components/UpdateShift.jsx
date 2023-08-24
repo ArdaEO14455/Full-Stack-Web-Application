@@ -1,7 +1,5 @@
 import React, { useState, } from 'react'
-import { useParams } from 'react-router-dom';
 import moment from 'moment';
-//CHANGE START
 
 
 const UpdateShift = ({ shift, updateShift, id} ) => {
