@@ -7,7 +7,7 @@ import moment from 'moment'
 const router = Router()
 
 function validateDateRange(req, res, next) {
-  const { start_date, end_date } = req.params; // extract params instead of query
+  const { start_date, end_date } = req.params
 
   if (!start_date || !end_date) {
       return res.status(400).send("Start date and end date are required.")
@@ -26,19 +26,18 @@ function validateDateRange(req, res, next) {
   next()
 }
 
-// Use :start_date and :end_date to denote params
 router.get('/:start_date/:end_date', validateDateRange, async (req, res) => {
-  const { start_date, end_date } = req.params; // extract params instead of query
+  const { start_date, end_date } = req.params
   try {
       const shifts = await ShiftModel.find({
           date: {
               $gte: start_date,
               $lte: end_date
           }
-       }).populate('employee', 'name email');
-      res.send(shifts);
+       }).populate('employee', 'name email')
+      res.send(shifts)
   } catch (err) {
-      res.status(500).send({ error: err.message });
+      res.status(500).send({ error: err.message })
   }
 })
 
@@ -57,7 +56,7 @@ router.post('/', async (req, res) => {
 
 router.put('/:id', async (req, res) => {
   try {
-    const shiftId = req.params.id;
+    const shiftId = req.params.id
     const { date, start, end, pause } = req.body; // Extract the new data from the request body
     // Find the shift by ID and update it
     const updatedShift = await ShiftModel.findByIdAndUpdate(shiftId, { date, start, end, pause}, { new: true })
