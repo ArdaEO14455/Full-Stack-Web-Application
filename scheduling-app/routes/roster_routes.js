@@ -10,20 +10,20 @@ function validateDateRange(req, res, next) {
   const { start_date, end_date } = req.params; // extract params instead of query
 
   if (!start_date || !end_date) {
-      return res.status(400).send("Start date and end date are required.");
+      return res.status(400).send("Start date and end date are required.")
   }
 
-  const isValidStartDate = moment(start_date, 'DD/MM/YYYY').isValid();
-  const isValidEndDate = moment(end_date, 'DD/MM/YYYY').isValid();
+  const isValidStartDate = moment(start_date, 'DD/MM/YYYY').isValid()
+  const isValidEndDate = moment(end_date, 'DD/MM/YYYY').isValid()
 
   if (!isValidStartDate || !isValidEndDate) {
-      return res.status(400).send("Invalid date format. Use DD/MM/YYYY format.");
+      return res.status(400).send("Invalid date format. Use DD/MM/YYYY format.")
   }
 
-  req.params.start_date = moment(start_date, 'DD/MM/YYYY').format('DD-MM-YYYY');
-  req.params.end_date = moment(end_date, 'DD/MM/YYYY').format('DD-MM-YYYY');
+  req.params.start_date = moment(start_date, 'DD/MM/YYYY').format('DD-MM-YYYY')
+  req.params.end_date = moment(end_date, 'DD/MM/YYYY').format('DD-MM-YYYY')
 
-  next();
+  next()
 }
 
 // Use :start_date and :end_date to denote params
@@ -60,9 +60,9 @@ router.put('/:id', async (req, res) => {
     const shiftId = req.params.id;
     const { date, start, end, pause } = req.body; // Extract the new data from the request body
     // Find the shift by ID and update it
-    const updatedShift = await ShiftModel.findByIdAndUpdate(shiftId, { date, start, end, pause}, { new: true });
+    const updatedShift = await ShiftModel.findByIdAndUpdate(shiftId, { date, start, end, pause}, { new: true })
     if (!updatedShift) {
-        return res.status(404).send({ error: "Shift not found" });
+        return res.status(404).send({ error: "Shift not found" })
     }
     res.send(updatedShift)  // Send back the updated shift
 } catch (err) {
