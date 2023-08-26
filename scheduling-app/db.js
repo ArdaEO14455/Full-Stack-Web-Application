@@ -7,7 +7,7 @@ dotenv.config()
 // function to close a database connection once the seeding is done
 async function dbClose() {
   await mongoose.connection.close()
-  console.log('Databse disconnected')
+  console.log('Database disconnected')
  }
 
 //  accessing the environment variables with process.env to connect to the database

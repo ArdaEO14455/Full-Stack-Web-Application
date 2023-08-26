@@ -1,7 +1,9 @@
 import { ShiftModel } from './ShiftModel.js'
 import { EmployeeModel } from './EmployeeModel.js'
 import { dbClose } from './db.js'
+import moment from 'moment'
 
+await ShiftModel.deleteMany()
 // declaring a variable "shifts" that will store objects containing date, start, end and pause properties in each
 const shifts = [
 { date: '21/08/2023', start: '09:00', end: '17:00', pause: 30 },
@@ -12,7 +14,6 @@ const shifts = [
 { date: '24/08/2023', start: '10:00', end: '18:00', pause: 60 }
 ]
 //  deleting the documents from the Shift collection
-await ShiftModel.deleteMany()
 console.log('Deleted shifts')
 // inserting the array of objects (shifts) into the Shift collection
 // and storing the array of inserted documents in shiftsArray variable
@@ -24,12 +25,21 @@ const employees = [
   {name: "Michael", email:"michael@gmail.com", phone: "85469304", dob: "23/08/1995", wage: 1500.0,contract: "casual", shifts: [shiftsArray[2], shiftsArray[3]]},
   {name: "Carlie", email:"carlie@gmail.com", phone: "7569315", dob: "1/05/1975", wage: 4000.0, contract: "full-time", shifts: [shiftsArray[4], shiftsArray[5]]}
 ]
+
 //  deleting the documents from the Employee collection 
 await EmployeeModel.deleteMany()
 console.log('Deleted employees')
 // seeding the Employee collection with the objects from the employees array
-await EmployeeModel.insertMany(employees)
+const employeesArray = await EmployeeModel.insertMany(employees)
 console.log('Inserted employees')
+
+for(let i = 0; i < employeesArray.length; i++) {
+  const employeeShifts = employeesArray[i].shifts
+  for(let shiftId of employeeShifts) {
+   let name = await ShiftModel.findByIdAndUpdate(shiftId, { employee: employeesArray[i]._id })
+   console.log(name)
+  }
+}
 
 // closing the database connection
 dbClose()
