@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
-import moment from 'moment'
+import parse from 'date-fns/parse/index.js'
+import isValid from 'date-fns/isValid/index.js';
 
 // creating a new shift schema 
 const shiftsSchema = new mongoose.Schema({ 
@@ -7,13 +8,16 @@ const shiftsSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-      validator: function(v) {
-        // checking if the date format is valid with "moment" library
-        // moment function will parse and validate the incoming value (date)
+        // checking if the date format is valid with "luxon" library
+        // Datetime function will parse and validate the incoming value (date)
         // accoring to the format provided as the second parameter
         //  isValid method will return a boolean value indicating whether the date adheres to the format
-        return moment(v, 'DD-MM-YYYY').isValid()
-      },
+        validator: function(v) {
+          // Using fns's parse function 
+          const parsedDate = parse(v, 'dd-MM-yyyy', new Date());
+          // isValid method will return a boolean value indicating whether the date adheres to the format
+          return isValid(parsedDate)
+        },
       // if it returns false, the message below will be displayed
       message: 'Date must be in the format DD-MM-YYYY',
   }},

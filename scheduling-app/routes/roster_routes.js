@@ -1,7 +1,8 @@
 import { Router } from 'express'
 import { EmployeeModel } from '../EmployeeModel.js'
 import { ShiftModel } from '../ShiftModel.js'
-import moment from 'moment'
+import parse from 'date-fns';
+import isValid from 'date-fns';
 
 // creating a new router object
 const router = Router()
@@ -10,24 +11,40 @@ const router = Router()
 function validateDate(req, res, next) {
   // extracting start_date and end_date from the parameters
   const { start_date, end_date } = req.params
-  //  if start_date or _end_date are not specified, the error message will be displayed
+  
   if (!start_date || !end_date) {
       return res.status(400).send("Start date and end date are required.")
   }
-  // storing a boolean value which returns when validating the date format 
-  const isValidStartDate = moment(start_date, 'DD/MM/YYYY').isValid()
-  const isValidEndDate = moment(end_date, 'DD/MM/YYYY').isValid()
-  // if start or end date are not of a valid format 
-  if (!isValidStartDate || !isValidEndDate) {
-    // return an error message 
+  
+  const startDateTime = DateTime.fromFormat(start_date, 'DD/MM/YYYY')
+  const endDateTime = DateTime.fromFormat(end_date, 'DD/MM/YYYY')
+
+  if (!startDateTime.isValid || !endDateTime.isValid) {
       return res.status(400).send("Invalid date format. Use DD/MM/YYYY format.")
   }
 
-  req.params.start_date = moment(start_date, 'DD/MM/YYYY').format('DD-MM-YYYY')
-  req.params.end_date = moment(end_date, 'DD/MM/YYYY').format('DD-MM-YYYY')
-  // passing control to the next middleware
+  req.params.start_date = startDateTime.toFormat('DD/MM/YYYY')
+  req.params.end_date = endDateTime.toFormat('DD/MM/YYYY')
+  
   next()
 }
+
+
+router.get('/', async (req, res) => {
+  try {
+    // Since no date range is specified, we simply find all shifts
+    const shifts = await ShiftModel.find()
+      // Populate the 'employee' field with only 'name' and 'email'
+      .populate('employee', 'name email');
+
+    // Send the shift details back to the client
+    res.send(shifts);
+  } catch (err) {
+    // In case of an error, send an error message back
+    res.status(500).send({ error: err.message });
+  }
+});
+
 
 // getting shifts from the specified date range
 router.get('/:start_date/:end_date', validateDate, async (req, res) => {
