@@ -16,15 +16,15 @@ function validateDate(req, res, next) {
       return res.status(400).send("Start date and end date are required.")
   }
   
-  const startDateTime = DateTime.fromFormat(start_date, 'DD/MM/YYYY')
-  const endDateTime = DateTime.fromFormat(end_date, 'DD/MM/YYYY')
+  const startDateTime = DateTime.fromFormat(start_date, 'DD-MM-YYYY')
+  const endDateTime = DateTime.fromFormat(end_date, 'DD-MM-YYYY')
 
   if (!startDateTime.isValid || !endDateTime.isValid) {
-      return res.status(400).send("Invalid date format. Use DD/MM/YYYY format.")
+      return res.status(400).send("Invalid date format. Use DD-MM-YYYY format.")
   }
 
-  req.params.start_date = startDateTime.toFormat('DD/MM/YYYY')
-  req.params.end_date = endDateTime.toFormat('DD/MM/YYYY')
+  req.params.start_date = startDateTime.toFormat('DD-MM-YYYY')
+  req.params.end_date = endDateTime.toFormat('DD-MM-YYYY')
   
   next()
 }

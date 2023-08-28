@@ -31,7 +31,7 @@ const employeesSchema = new mongoose.Schema({
         //  isValid method will return a boolean value indicating whether the date adheres to the format
          validator: function(v) {
           // Using fns's parse function 
-          const parsedDate = parse(v, 'dd-MM-yyyy', new Date());
+          const parsedDate = parse(v, 'dd-MM-yyyy', new Date())
           // isValid method will return a boolean value indicating whether the date adheres to the format
           return isValid(parsedDate)
         // isValid method will return a boolean value indicating whether the date adheres to the format
