@@ -9,21 +9,6 @@ import NewEmployee from './NewEmployee';
 import UpdateEmployee from './UpdateEmployee';
 import Addshift from './NewShift';
 
-// // Seed Shift Data
-// const seedShifts =
-// [
-//   { employee: "Arda", startDate: "2023-08-24", startTime: "17:10", start: 'Thu Aug 24 2023 17:10:00 GMT+1000 (Australian Eastern Standard Time)', endDate: "2023-08-24", endTime: "22:00", end: 'Thu Aug 24 2023 22:00:00 GMT+1000 (Australian Eastern Standard Time', pause: "30" },
-//   { employee: "Arda", startDate: "2023-08-23", startTime: "17:10", start: 'Thu Aug 23 2023 17:10:00 GMT+1000 (Australian Eastern Standard Time)', endDate: "2023-08-23", endTime: "22:00", end: 'Thu Aug 23 2023 22:00:00 GMT+1000 (Australian Eastern Standard Time', pause: "30" },
-//   { employee: "Arda", startDate: "2023-08-25", startTime: "17:10", start: 'Thu Aug 25 2023 17:10:00 GMT+1000 (Australian Eastern Standard Time)', endDate: "2023-08-25", endTime: "22:00", end: 'Thu Aug 25 2023 22:00:00 GMT+1000 (Australian Eastern Standard Time', pause: "30" }
-// ]
-
-// //Seed Employee Data
-// const seedEmployees = [
-//   {name: "Arda", email:"abc123@coderacademy.edu.au", phone: "0412391252", dob: "1997-05-10", wage: "Test1", contract: "Full Time" },
-//   {name: "Damira", email:"abc123@coderacademy.edu.au", phone: "0413597278", dob: "2001-07-27", wage: "Test2", contract: "Full Time" },
-//   {name: "Pixel", email:"abc123@coderacademy.edu.au", phone: "0413992960", dob: "1999-01-10", wage: "Test3", contract: "Full Time" },
-// ]
-
 
 const App = () => {
 
@@ -70,7 +55,6 @@ function ShowEmployeeWrapper() {
     (async () => {
       const res = await fetch("http://localhost:4001/roster")
       const data = await res.json()
-      console.log(data)
       setShifts(data)
     })()
   }, [])
@@ -78,11 +62,11 @@ function ShowEmployeeWrapper() {
   // Allow Routes to Access ID variables from Shifts
 function ShowShiftWrapper() {
   const { id } = useParams()
-  const shift_id = id
-  const selectedshift = shifts[id]
-  console.log(selectedshift)
-  return <UpdateShift shift={selectedshift} updateShift={updateShift} id={shift_id}/>
-  }
+  const selectedShift = shifts.find(shift => shift._id == id)
+  console.log(selectedShift)
+ return selectedShift ? (<UpdateShift employees= {employees} shift={selectedShift} updateShift={updateShift}/>
+  ): (<div>Loading...</div>)
+}
 
   //Shift Creation
   async function addShift( { employee, startDate, startTime, start, endDate, endTime, end, pause }) {
@@ -93,18 +77,10 @@ function ShowShiftWrapper() {
         body: JSON.stringify({ employee, startDate, startTime, start, endDate, endTime, end, pause }),
         headers: { "Content-Type": "application/json" }
       })
-      console.log(returnedShift)
       setShifts([...shifts, await returnedShift.json()])
     
     }
       
-  
-  
-  
-  // const addShift = (newShift) => {
-  //   setShifts(CurrentShifts => [...CurrentShifts, newShift]);
-  // };
-
   // Shift Updating
   const updateShift = (updatedShift) => {
     setShifts((shifts) => {
@@ -131,12 +107,12 @@ function ShowShiftWrapper() {
         {/* Employees Routes */}
         <Route path='/employees' element={<Employees employees={employees}  />} />
           <Route path='/employees/new' element={<NewEmployee addEmployee={addEmployee} />}/>
-        <Route path='/employees/:id' element={<ShowEmployeeWrapper employees={employees} updateEmployee={updateEmployee}/>} />
+        <Route path='/employees/:id' element={<ShowEmployeeWrapper employees={employees} shifts={shifts} updateEmployee={updateEmployee}/>} />
         
         {/* Roster & Shift Paths */}
         <Route path='/roster' element={<Roster shifts={shifts} />} />
         <Route path='/roster/new' element={<Addshift addShift={addShift} employees={employees}/>} />
-        <Route path='/roster/:id' element={<ShowShiftWrapper shifts={shifts} updateShift={updateShift}/> } />
+        <Route path='/roster/:id' element={<ShowShiftWrapper /> } />
 
         {/* Catch-all for invalid URLs */}
         <Route path='*' element= {<h3>Page Not Found</h3>} /> 
