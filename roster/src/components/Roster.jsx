@@ -7,7 +7,7 @@ import enUS from 'date-fns/locale/en-US'
 import parse from 'date-fns/parse'
 import moment from 'moment';
 import { momentLocalizer } from 'react-big-calendar';
-
+import { add } from 'date-fns';
 
 const localizer = momentLocalizer(moment);
 
@@ -23,20 +23,31 @@ const Roster = ({ shifts }) => {
   const calculateProjectedWageExpense = (range, view) => {
     let startDateRange;
     let endDateRange;
-  
+    // console.log(range)
+    // console.log(range.start)
+    // console.log(moment(range.start))
+    // console.log(moment(range.start).startOf('month'))
+
     // Calculate appropriate startDateRange and endDateRange based on the current view
     switch (view) {
       case 'month':
-        startDateRange = moment(range.start).startOf('month');
-        endDateRange = moment(range.end).endOf('month');
+        // console.log(range.start)
+        // console.log(range)
+        // console.log(range.end)
+        startDateRange = moment(range.start).startOf('month')._i;
+        endDateRange = moment(range.end).endOf('month')._i;
         break;
       case 'week':
-        startDateRange = moment(range.start).startOf('week');
-        endDateRange = moment(range.end).endOf('week');
+        // console.log(range)
+        startDateRange = moment(range.start).startOf('week')._d;
+        endDateRange = moment(range.end).endOf('week')._d;
         break;
       case 'day':
-        startDateRange = moment(range.start).startOf('day');
-        endDateRange = moment(range.end).endOf('day');
+        // console.log(range)
+        startDateRange = moment(range[0])._i;
+        endDateRange = moment(add(new Date(range), { days: 1 }))._i
+        // console.log(startDateRange)
+        // console.log(endDateRange)
         break;
       default:
         // Handle other views if needed
@@ -44,21 +55,19 @@ const Roster = ({ shifts }) => {
         endDateRange = moment(range.end);
         break;
     }
-    console.log(startDateRange._d)
-    console.log(endDateRange._d)
+    // console.log(startDateRange)
+    // console.log(endDateRange)
     
     const newProjectedWageExpense = shifts
       .filter((shift) => {
         const shiftStartDate = moment(shift.start);
-        return shiftStartDate.isBetween(startDateRange._d, endDateRange._d, null, '[]');
+        return shiftStartDate.isBetween(startDateRange, endDateRange, null, '[]');
       })
       .map((shift) => {
         const wage = 10; // Default wage if no employee
         const startTime = moment(shift.start);
         const endTime = moment(shift.end);
         const durationHours = endTime.diff(startTime, 'hours');
-        console.log(wage)
-        console.log(durationHours)
         return wage * durationHours;
       })
       .reduce((totalWage, shiftWage) => totalWage + shiftWage, 0);
