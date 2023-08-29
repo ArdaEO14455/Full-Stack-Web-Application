@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import { parse, format, addDays } from 'date-fns';
-import { Link } from 'react-router-dom';
+import { parse, addDays } from 'date-fns';
 
 const UpdateShift = ({ shift, updateShift, employees, deleteShift }) => {
   const [employee, setEmployee] = useState(shift.employee);
@@ -32,15 +31,6 @@ const UpdateShift = ({ shift, updateShift, employees, deleteShift }) => {
       pause,
     };
     updateShift(updatedShift);
-    
-
-    // Reset form fields
-    // setEmployee('');
-    // setStartDate('');
-    // setEndDate('');
-    // setStartTime('');
-    // setEndTime('');
-    // setPause('');
   };
 
   const shiftDelete = (e) => {
@@ -134,12 +124,12 @@ const UpdateShift = ({ shift, updateShift, employees, deleteShift }) => {
           Update Shift
         </button>
         {/* Delete Button */}
-        
+        <button onClick={shiftDelete} className="btn btn-danger mt-3 container-lg" align="center">
+          Delete Shift
+        </button> 
       </form>
       
-      <button onClick={shiftDelete} className="btn btn-danger mt-3 container-lg">
-          Delete Shift
-        </button>      
+           
     </>
   ) : (
     <h4>Shift not found</h4>

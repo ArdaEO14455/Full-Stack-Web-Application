@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import moment from 'moment';
-import { useParams } from 'react-router-dom';
-import { toDate } from 'date-fns';
 
 const NewShift = ({ addShift, employees }) => {
 
@@ -24,7 +22,7 @@ const NewShift = ({ addShift, employees }) => {
    
     const newShift = {
       employee,
-      
+
       // Start Details
       startDate,
       startTime,
@@ -39,15 +37,6 @@ const NewShift = ({ addShift, employees }) => {
       pause,
     };
     addShift(newShift);
-    console.log(newShift)
-
-    // Reset form fields
-  //   setEmployee('');
-  //   setStartDate('');
-  //   setEndDate('');
-  //   setStartTime('');
-  //   setEndTime('');
-  //   setPause('');
   };
 
   return (

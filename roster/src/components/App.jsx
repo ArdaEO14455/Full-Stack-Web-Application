@@ -7,7 +7,7 @@ import Employees from './Employees';
 import Roster from './Roster';
 import NewEmployee from './NewEmployee';
 import UpdateEmployee from './UpdateEmployee';
-import Addshift from './NewShift';
+import NewShift from './NewShift';
 
 
 const App = () => {
@@ -126,16 +126,16 @@ function ShowShiftWrapper() {
       <Routes>
         
         {/* Overview */}
-        <Route path='/' element={<Overview />} />
+        <Route path='/' element={<Overview employees={employees} shifts={shifts} />} />
         
         {/* Employees Routes */}
         <Route path='/employees' element={<Employees employees={employees}  />} />
           <Route path='/employees/new' element={<NewEmployee addEmployee={addEmployee} />}/>
-        <Route path='/employees/:id' element={<ShowEmployeeWrapper employees={employees} shifts={shifts} updateEmployee={updateEmployee}/>} />
+        <Route path='/employees/:id' element={<ShowEmployeeWrapper />} />
         
         {/* Roster & Shift Paths */}
         <Route path='/roster' element={<Roster shifts={shifts} />} />
-        <Route path='/roster/new' element={<Addshift addShift={addShift} employees={employees}/>} />
+        <Route path='/roster/new' element={<NewShift addShift={addShift} employees={employees}/>} />
         <Route path='/roster/:id' element={<ShowShiftWrapper /> } />
 
         {/* Catch-all for invalid URLs */}
