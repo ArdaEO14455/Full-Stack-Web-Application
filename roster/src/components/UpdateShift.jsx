@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { parse, format, addDays } from 'date-fns';
+import { Link } from 'react-router-dom';
 
-const UpdateShift = ({ shift, updateShift, employees }) => {
+const UpdateShift = ({ shift, updateShift, employees, deleteShift }) => {
   const [employee, setEmployee] = useState(shift.employee);
   const [startDate, setStartDate] = useState(shift.startDate);
   const [startTime, setStartTime] = useState(shift.startTime);
@@ -42,6 +43,12 @@ const UpdateShift = ({ shift, updateShift, employees }) => {
     // setPause('');
   };
 
+  const shiftDelete = (e) => {
+    e.preventDefault();
+    deleteShift(shift)
+  }
+
+
   return shift ? (
     <>
       <h5> Employee: {shift.employee.name}</h5>
@@ -53,8 +60,7 @@ const UpdateShift = ({ shift, updateShift, employees }) => {
       <h1 className="row justify-content-center">Edit Shift</h1>
       <form className="container" onSubmit={submit}>
         {/* Employee Field */}
-        <select className="d-block form-select" aria-label="Default select example" required value={employee._id} onChange={event => setEmployee(event.target.value) }>
-      <option selected>Select Employee</option>
+        <select className="d-block form-select" required value={employee._id} onChange={event => setEmployee(event.target.value) }>
         {
           employees.map((employee) => {
             return <option key={employee._id} value={employee._id}>{employee.name}</option>
@@ -127,7 +133,13 @@ const UpdateShift = ({ shift, updateShift, employees }) => {
         <button type="submit" className="btn btn-primary mt-3 container-lg">
           Update Shift
         </button>
+        {/* Delete Button */}
+        
       </form>
+      
+      <button onClick={shiftDelete} className="btn btn-danger mt-3 container-lg">
+          Delete Shift
+        </button>      
     </>
   ) : (
     <h4>Shift not found</h4>

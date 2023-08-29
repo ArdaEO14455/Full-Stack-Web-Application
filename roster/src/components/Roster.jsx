@@ -31,16 +31,15 @@ const localizer = dateFnsLocalizer({
 });
 
 const Roster = ({ shifts }) => {
-  // if (shifts.length === 0) {
-  //   return <h1 align='center'>Loading Shifts...</h1>
-  // }
+
   
       const events = shifts.map((shift) => {
       const start = moment(shift.start).toDate(); // Parse start time
       const end = moment(shift.end).toDate();     // Parse end time
-      const employeeName = shift.employee ? shift.employee.name : 'Unknown Employee'
-
+      // const employeeName = shift.employee ? shift.employee.name : 'Admin'
+      const employeeName = shift.employee.name
       return {
+
         title: (
           <Link to={`/roster/${shift._id}`} className='text-black'>
             {employeeName}<br />
@@ -68,6 +67,7 @@ const Roster = ({ shifts }) => {
         startAccessor="start"
         endAccessor="end"
         style={{ height: 800 }}
+        key = {[shifts]}
       />
     </div>
   );

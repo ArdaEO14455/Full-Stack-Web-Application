@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Routes, Route, useParams } from 'react-router-dom';
+import { Routes, Route, useParams, useNavigate } from 'react-router-dom';
 import Overview from './Overview';
 import UpdateShift from './UpdateShift';
 import NavBar from './NavBar';
@@ -11,6 +11,8 @@ import Addshift from './NewShift';
 
 
 const App = () => {
+  const nav = useNavigate()
+  const reload = () => {window.location.reload()}
 
   // Employee Functions
   // Define useState for Employees here to allow access from Employees & NewEmployee Component
@@ -64,7 +66,7 @@ function ShowShiftWrapper() {
   const { id } = useParams()
   const selectedShift = shifts.find(shift => shift._id == id)
   // console.log(selectedShift)
- return selectedShift ? (<UpdateShift employees= {employees} shift={selectedShift} updateShift={updateShift}/>
+ return selectedShift ? (<UpdateShift employees= {employees} shift={selectedShift} updateShift={updateShift} deleteShift={deleteShift}/>
   ): (<div>Loading...</div>)
 }
 
@@ -77,27 +79,45 @@ function ShowShiftWrapper() {
         body: JSON.stringify({ employee, startDate, startTime, start, endDate, endTime, end, pause }),
         headers: { "Content-Type": "application/json" }
       })
+      
       setShifts([...shifts, await returnedShift.json()])
+      nav("/roster/")
+      reload()
     
     }
-  
+  // Shift Update
   async function updateShift(updatedShift) {
-    console.log(updatedShift._id)
     const response = await fetch(`http://localhost:4001/roster/${updatedShift._id}`, {
         method: 'PUT',
         body: JSON.stringify(updatedShift),
         headers: { "Content-Type": "application/json" }
       });
-      // console.log(response)
       
-  
         const updatedShiftData = await response.json();
         setShifts((prevShifts) =>
           prevShifts.map((shift) =>
             shift._id == updatedShiftData._id ? updatedShiftData : shift
           )
-        );
+        )
+        nav("/roster/")
+        reload()
       }
+// Shift Delete
+      const deleteShift = async (shift) => {
+        console.log(shift)
+        if (window.confirm('Are you sure you want to delete this shift?')) {
+          try {
+            await fetch(`http://localhost:4001/roster/${shift._id}`, {
+              method: 'DELETE',
+            });
+            setShifts([shifts])
+            nav("/roster/")
+            reload()
+          } catch (error) {
+            console.error('Error deleting shift:', error);
+          }
+        }
+      };
 
 // Routes
   return (
