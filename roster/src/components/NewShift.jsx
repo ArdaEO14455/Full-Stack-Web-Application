@@ -1,7 +1,11 @@
 import React, { useState } from 'react';
 import moment from 'moment';
+import { useParams } from 'react-router-dom';
+import { toDate } from 'date-fns';
 
-const NewShift = ({ addShift }) => {
+const NewShift = ({ addShift, employees }) => {
+
+
   const [employee, setEmployee] = useState('');
   const [startDate, setStartDate] = useState('');
   const [startTime, setStartTime] = useState('');
@@ -12,26 +16,24 @@ const NewShift = ({ addShift }) => {
   const submit = (e) => {
     e.preventDefault();
 
-    // Combine date and time for start and end
+    // // Combine date and time for start and end
     const start = moment(`${startDate} ${startTime}`, 'YYYY-MM-DD HH:mm').toDate();
 
-    // If the end time is on the next day, add one day to the end date
-    let end = moment(`${endDate} ${endTime}`, 'YYYY-MM-DD HH:mm');
-    if (moment(end).isBefore(start)) {
-      end.add(1, 'day');
-    }
-    end = end.toDate();
-
+    // // If the end time is on the next day, add one day to the end date
+    const end = moment(`${endDate} ${endTime}`, 'YYYY-MM-DD HH:mm').toDate();
+   
     const newShift = {
       employee,
       // Start Details
       startDate,
       startTime,
       start,
+
       // End Details
       endDate,
       endTime,
       end,
+
       //Break
       pause,
     };
@@ -55,15 +57,17 @@ const NewShift = ({ addShift }) => {
       onSubmit={submit}
       >
         {/* Employee Field */}
-        <label for="exampleFormControlInput1" className="form-label">Select Employee</label>
-          <input 
-          value={employee} onChange= {e => setEmployee(e.target.value)} 
-          className="form-control form-control-lg" 
-          type="text" 
-          placeholder="John Doe" 
-          aria-label=".form-control-lg example" 
-          required 
-          />
+        
+      <span>Select Employee: </span>
+      <select className="d-block" value={employee._id} onChange={event => setEmployee(event.target.value)}>
+        {
+          employees.map((employee) => {
+            // console.log(employee._id)
+            return <option key={employee._id} value={employee._id}>{employee.name}</option>
+          })
+        }
+      </select>
+
           
         {/* Shift Start */}
         <label for="startTimeInput" className="form-label">Shift Start</label>

@@ -2,14 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
 import format from 'date-fns/format';
-import startOfDay from 'date-fns/startOfDay';
-import endOfDay from 'date-fns/endOfDay';
-import getHours from 'date-fns/getHours';
-import getMinutes from 'date-fns/getMinutes';
-import parseISO from 'date-fns/parseISO';
+// import startOfDay from 'date-fns/startOfDay';
+// import endOfDay from 'date-fns/endOfDay';
+// import getHours from 'date-fns/getHours';
+// import getMinutes from 'date-fns/getMinutes';
+// import parseISO from 'date-fns/parseISO';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import enUS from 'date-fns/locale/en-US'
 import parse from 'date-fns/parse'
+import moment from 'moment';
+
 
 // Localizer setup
 const locales = {
@@ -29,27 +31,28 @@ const localizer = dateFnsLocalizer({
 });
 
 const Roster = ({ shifts }) => {
+      const events = shifts.map((shift) => {
+      const start = moment(shift.start).toDate(); // Parse start time
+      const end = moment(shift.end).toDate();     // Parse end time
 
-      const events = shifts.map((shift, index) => {
-      const startDate = parse(`${shift.date} ${shift.start}`, 'dd-MM-yyyy HH:mm', new Date());
-      const endDate = parse(`${shift.date} ${shift.end}`, 'dd-MM-yyyy HH:mm', new Date());
+
       
-
-      function padNumber(num) {
-        return num < 10 ? `0${num}` : `${num}`
-      }
+      const employeeName = shift.employee.name
+      console.log(shift._id)
            
       return {
         title: (
-          <Link to={`/roster/${index}`} className='text-black'>
-            {shift.employee.name}<br />
-            Shift: {`${padNumber(getHours(startDate))}:${padNumber(getMinutes(startDate))}`} - {`${padNumber(getHours(endDate))}:${padNumber(getMinutes(endDate))}`} <br />
+          <Link to={`/roster/${shift._id}`} className='text-black'>
+            {employeeName}<br />
+            {/* Shift: {`${padNumber(getHours(startDate))}:${padNumber(getMinutes(startDate))}`} - {`${padNumber(getHours(endDate))}:${padNumber(getMinutes(endDate))}`} <br /> */}
+            Shift: {shift.startTime} - {shift.endTime} <br />
             Break: {shift.pause}
           </Link>
         ),
-        start: startDate,
-        end: endDate,
-        key: index
+        start: start,
+        end: end,
+        key: shift._id,
+        
       };
       
   });

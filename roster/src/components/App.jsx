@@ -70,6 +70,7 @@ function ShowEmployeeWrapper() {
     (async () => {
       const res = await fetch("http://localhost:4001/roster")
       const data = await res.json()
+      console.log(data)
       setShifts(data)
     })()
   }, [])
@@ -79,13 +80,30 @@ function ShowShiftWrapper() {
   const { id } = useParams()
   const shift_id = id
   const selectedshift = shifts[id]
+  // console.log(selectedshift)
   return <UpdateShift shift={selectedshift} updateShift={updateShift} id={shift_id}/>
   }
 
   //Shift Creation
-  const addShift = (newShift) => {
-    setShifts(CurrentShifts => [...CurrentShifts, newShift]);
-  };
+  async function addShift( { employee, startDate, startTime, start, endDate, endTime, end, pause }) {
+    const id = shifts.length
+    // Add a new entry
+      const returnedShift= await fetch('http://localhost:4001/roster/new', {
+        method: 'POST',
+        body: JSON.stringify({ employee, startDate, startTime, start, endDate, endTime, end, pause }),
+        headers: { "Content-Type": "application/json" }
+      })
+      console.log(returnedShift)
+      setShifts([...shifts, await returnedShift.json()])
+    
+    }
+      
+  
+  
+  
+  // const addShift = (newShift) => {
+  //   setShifts(CurrentShifts => [...CurrentShifts, newShift]);
+  // };
 
   // Shift Updating
   const updateShift = (updatedShift) => {
@@ -117,7 +135,7 @@ function ShowShiftWrapper() {
         
         {/* Roster & Shift Paths */}
         <Route path='/roster' element={<Roster shifts={shifts} />} />
-        <Route path='/roster/new' element={<Addshift addShift={addShift}/>} />
+        <Route path='/roster/new' element={<Addshift addShift={addShift} employees={employees}/>} />
         <Route path='/roster/:id' element={<ShowShiftWrapper shifts={shifts} updateShift={updateShift}/> } />
 
         {/* Catch-all for invalid URLs */}
