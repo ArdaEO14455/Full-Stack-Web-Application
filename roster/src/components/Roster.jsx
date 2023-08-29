@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
 import format from 'date-fns/format';
@@ -9,41 +9,78 @@ import moment from 'moment';
 import { momentLocalizer } from 'react-big-calendar';
 
 
-// Localizer setup
-// const locales = {
-//   'en-US': enUS
-// };
-
-// const localizer = dateFnsLocalizer({
-//   format,
-//   parse: (value, _locale) => {
-//     // parsing the date according to the expected format
-//     return parse(value, 'dd-MM-yyyy', new Date())
-// },
-
-//   startOfWeek: () => 0,
-//   getDay: date => new Date(date).getDay(),
-//   locales
-// });
 const localizer = momentLocalizer(moment);
 
 const Roster = ({ shifts }) => {
-  const projectedWageExpense = shifts
-    .map((shift) => {
-      const wage = 10; // Default wage if no employee
-      const startTime = moment(shift.start);
-      const endTime = moment(shift.end);
-      const durationHours = endTime.diff(startTime, 'hours');
+  const [currentView, setCurrentView] = useState('month'); // Default view is month
+  const [projectedWageExpense, setProjectedWageExpense] = useState(0); // Initialize with 0
 
-    // console.log("Shift:", shift);
-    // console.log("Wage:", wage);
-    // console.log(startTime)
-    // console.log(endTime)
-    console.log("Duration:", durationHours);
-      console.log(wage * durationHours)
-      return wage * durationHours;
-    })
-    .reduce((totalWage, shiftWage) => totalWage + shiftWage, 0);
+  const handleRangeChange = (range, view) => {
+    setCurrentView(view); // Update the current view
+    calculateProjectedWageExpense(range, view); // Call the function to calculate projected wage expense
+  };
+  
+  const calculateProjectedWageExpense = (range, view) => {
+    let startDateRange;
+    let endDateRange;
+  
+    // Calculate appropriate startDateRange and endDateRange based on the current view
+    switch (view) {
+      case 'month':
+        startDateRange = moment(range.start).startOf('month');
+        endDateRange = moment(range.end).endOf('month');
+        break;
+      case 'week':
+        startDateRange = moment(range.start).startOf('week');
+        endDateRange = moment(range.end).endOf('week');
+        break;
+      case 'day':
+        startDateRange = moment(range.start).startOf('day');
+        endDateRange = moment(range.end).endOf('day');
+        break;
+      default:
+        // Handle other views if needed
+        startDateRange = moment(range.start);
+        endDateRange = moment(range.end);
+        break;
+    }
+    console.log(startDateRange._d)
+    console.log(endDateRange._d)
+    
+    const newProjectedWageExpense = shifts
+      .filter((shift) => {
+        const shiftStartDate = moment(shift.start);
+        return shiftStartDate.isBetween(startDateRange._d, endDateRange._d, null, '[]');
+      })
+      .map((shift) => {
+        const wage = 10; // Default wage if no employee
+        const startTime = moment(shift.start);
+        const endTime = moment(shift.end);
+        const durationHours = endTime.diff(startTime, 'hours');
+        console.log(wage)
+        console.log(durationHours)
+        return wage * durationHours;
+      })
+      .reduce((totalWage, shiftWage) => totalWage + shiftWage, 0);
+  
+    setProjectedWageExpense(newProjectedWageExpense); // Update the projected wage expense state
+  };
+
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  
   
 
       const events = shifts.map((shift) => {
@@ -56,8 +93,25 @@ const Roster = ({ shifts }) => {
 
 
 
-
       
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
       return {
 
         title: (
@@ -88,9 +142,12 @@ const Roster = ({ shifts }) => {
         startAccessor="start"
         endAccessor="end"
         style={{ height: 800 }}
-        key = {[shifts]}
+        onView={(view) => setCurrentView(view)}
+        onRangeChange={handleRangeChange}
+        onNavigate={handleRangeChange}
       />
     </div>
   );
 };
+
 export default Roster;
