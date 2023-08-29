@@ -38,7 +38,7 @@ const Roster = ({ shifts }) => {
 
       
       const employeeName = shift.employee.name
-      console.log(shift._id)
+
            
       return {
         title: (

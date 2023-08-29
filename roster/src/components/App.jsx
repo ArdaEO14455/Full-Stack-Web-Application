@@ -80,7 +80,7 @@ function ShowShiftWrapper() {
   const { id } = useParams()
   const shift_id = id
   const selectedshift = shifts[id]
-  // console.log(selectedshift)
+  console.log(selectedshift)
   return <UpdateShift shift={selectedshift} updateShift={updateShift} id={shift_id}/>
   }
 
