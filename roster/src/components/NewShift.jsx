@@ -21,6 +21,11 @@ const NewShift = ({ addShift, employees }) => {
 
     // // If the end time is on the next day, add one day to the end date
     const end = moment(`${endDate} ${endTime}`, 'YYYY-MM-DD HH:mm').toDate();
+
+    if (!employee._id) {
+      alert('Please select an employee');
+      return;
+    }
    
     const newShift = {
       employee,
@@ -57,13 +62,13 @@ const NewShift = ({ addShift, employees }) => {
       onSubmit={submit}
       >
         {/* Employee Field */}
-        
-      <span>Select Employee: </span>
-      <select className="d-block" value={employee._id} onChange={event => setEmployee(event.target.value)}>
+      
+      <select className="d-block form-select" aria-label="Default select example" required value={employee._id} onChange={event => setEmployee(event.target.value) }>
+      <option selected>Select Employee</option>
         {
           employees.map((employee) => {
-            // console.log(employee._id)
             return <option key={employee._id} value={employee._id}>{employee.name}</option>
+            
           })
         }
       </select>

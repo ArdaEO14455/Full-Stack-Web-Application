@@ -20,6 +20,7 @@ const UpdateShift = ({ shift, updateShift, employees }) => {
     }
 
     const updatedShift = {
+      _id: shift._id,
       employee,
       startDate,
       startTime,
@@ -30,6 +31,7 @@ const UpdateShift = ({ shift, updateShift, employees }) => {
       pause,
     };
     updateShift(updatedShift);
+    
 
     // Reset form fields
     // setEmployee('');
@@ -51,12 +53,12 @@ const UpdateShift = ({ shift, updateShift, employees }) => {
       <h1 className="row justify-content-center">Edit Shift</h1>
       <form className="container" onSubmit={submit}>
         {/* Employee Field */}
-        <span>Select Employee: </span>
-      <select className="d-block" value={employee._id} onChange={event => setEmployee(event.target.value)}>
+        <select className="d-block form-select" aria-label="Default select example" required value={employee._id} onChange={event => setEmployee(event.target.value) }>
+      <option selected>Select Employee</option>
         {
           employees.map((employee) => {
-            // console.log(employee._id)
             return <option key={employee._id} value={employee._id}>{employee.name}</option>
+            
           })
         }
       </select>

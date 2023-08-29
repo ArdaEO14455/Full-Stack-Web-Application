@@ -63,14 +63,14 @@ function ShowEmployeeWrapper() {
 function ShowShiftWrapper() {
   const { id } = useParams()
   const selectedShift = shifts.find(shift => shift._id == id)
-  console.log(selectedShift)
+  // console.log(selectedShift)
  return selectedShift ? (<UpdateShift employees= {employees} shift={selectedShift} updateShift={updateShift}/>
   ): (<div>Loading...</div>)
 }
 
   //Shift Creation
   async function addShift( { employee, startDate, startTime, start, endDate, endTime, end, pause }) {
-    const id = shifts.length
+    // const id = shifts.length
     // Add a new entry
       const returnedShift= await fetch('http://localhost:4001/roster/new', {
         method: 'POST',
@@ -80,20 +80,24 @@ function ShowShiftWrapper() {
       setShifts([...shifts, await returnedShift.json()])
     
     }
+  
+  async function updateShift(updatedShift) {
+    console.log(updatedShift._id)
+    const response = await fetch(`http://localhost:4001/roster/${updatedShift._id}`, {
+        method: 'PUT',
+        body: JSON.stringify(updatedShift),
+        headers: { "Content-Type": "application/json" }
+      });
+      // console.log(response)
       
-  // Shift Updating
-  const updateShift = (updatedShift) => {
-    setShifts((shifts) => {
-      return shifts.map((shift, index) =>
-        index === updatedShift.id ? updatedShift : shift
-      );
-    });
-  };
-
-
-
-
-
+  
+        const updatedShiftData = await response.json();
+        setShifts((prevShifts) =>
+          prevShifts.map((shift) =>
+            shift._id == updatedShiftData._id ? updatedShiftData : shift
+          )
+        );
+      }
 
 // Routes
   return (
@@ -121,7 +125,7 @@ function ShowShiftWrapper() {
     
   
   </> 
-  )
-}
+  
+)}
 
 export default App

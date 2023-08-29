@@ -20,7 +20,7 @@ const locales = {
 
 const localizer = dateFnsLocalizer({
   format,
-  parse: (value, formatString, _locale) => {
+  parse: (value, _locale) => {
     // parsing the date according to the expected format
     return parse(value, 'dd-MM-yyyy', new Date())
 },
@@ -31,20 +31,19 @@ const localizer = dateFnsLocalizer({
 });
 
 const Roster = ({ shifts }) => {
+  // if (shifts.length === 0) {
+  //   return <h1 align='center'>Loading Shifts...</h1>
+  // }
+  
       const events = shifts.map((shift) => {
       const start = moment(shift.start).toDate(); // Parse start time
       const end = moment(shift.end).toDate();     // Parse end time
+      const employeeName = shift.employee ? shift.employee.name : 'Unknown Employee'
 
-
-      
-      const employeeName = shift.employee.name
-
-           
       return {
         title: (
           <Link to={`/roster/${shift._id}`} className='text-black'>
             {employeeName}<br />
-            {/* Shift: {`${padNumber(getHours(startDate))}:${padNumber(getMinutes(startDate))}`} - {`${padNumber(getHours(endDate))}:${padNumber(getMinutes(endDate))}`} <br /> */}
             Shift: {shift.startTime} - {shift.endTime} <br />
             Break: {shift.pause}
           </Link>
@@ -53,7 +52,7 @@ const Roster = ({ shifts }) => {
         end: end,
         key: shift._id,
         
-      };
+      }
       
   });
 
