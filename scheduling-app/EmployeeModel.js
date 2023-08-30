@@ -1,6 +1,7 @@
 import mongoose from 'mongoose'
 import parse from 'date-fns/parse/index.js';
 import isValid from 'date-fns/isValid/index.js';
+import { ShiftModel } from './ShiftModel.js';
 
 //  employees schema with the validation rules for the fields
 // defining the structure of the model Employee
@@ -57,16 +58,22 @@ const employeesSchema = new mongoose.Schema({
   }
 })
 
-employeesSchema.pre('deleteOne', { document: false, query: true }, async function(next) {
-  const employeeId = this.getQuery()["_id"];
-  try {
-      await mongoose.model('Shift').deleteMany({ employee: employeeId });
-      next();
-  } catch (error) {
-      next(error);
+// Individual deletion
+employeesSchema.pre("findOneAndDelete", async function(next) {
+  const doc = await this.model.findOne(this.getQuery());
+  if (doc) {
+    await ShiftModel.deleteMany({ employee: doc._id });
   }
+  next();
 });
 
+// Bulk deletion
+employeesSchema.pre("deleteOne", { document: false, query: true }, async function(next) {
+  const docs = await this.model.find(this.getFilter());
+  const users = docs.map((item) => item._id);
+  await ShiftModel.deleteMany({ employee: { $in: users } });
+  next();
+});
 
 
 // creating a model based on the employees schema

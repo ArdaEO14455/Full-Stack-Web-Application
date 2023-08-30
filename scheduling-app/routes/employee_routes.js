@@ -75,19 +75,20 @@ router.put('/:id', async (req, res) => {
 router.delete('/:id', async (req, res) => {
   try {
     const deleteResult = await EmployeeModel.deleteOne({ _id: req.params.id });
-    if (deleteResult && deleteResult.deletedCount > 0) {
-      await employee.deleteOne()
-      // respond with a status code 200
-      res.sendStatus(200)
-      // if employee is not found, display an error message with a status code 404
+    console.log(deleteResult)
+    console.log(deleteResult.n);  // Log the value
+
+    if (deleteResult.deletedCount > 0) {
+      res.sendStatus(200);
     } else {
-      res.status(404).send({ error: 'Employee not found' })
+      res.status(404).send({ error: 'Employee not found' });
     }
   }
-  catch(err){
-    // respond with a status code 500, displaying an error message in case it fails
-    res.status(500).send({ error: err.message })
+  catch(err) {
+    res.status(500).send({ error: err.message });
   }
-})
+});
+
+
 
 export default router
