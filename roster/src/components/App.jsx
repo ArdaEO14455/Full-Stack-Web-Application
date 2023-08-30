@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { Routes, Route, useParams, useNavigate } from 'react-router-dom';
-import Overview from './Overview';
 import UpdateShift from './UpdateShift';
 import NavBar from './NavBar';
 import Employees from './Employees';
@@ -124,9 +123,6 @@ function ShowShiftWrapper() {
     <>
       <NavBar />
       <Routes>
-        
-        {/* Overview */}
-        <Route path='/' element={<Overview employees={employees} shifts={shifts} />} />
         
         {/* Employees Routes */}
         <Route path='/employees' element={<Employees employees={employees}  />} />

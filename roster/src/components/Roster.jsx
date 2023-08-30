@@ -23,41 +23,45 @@ const Roster = ({ shifts }) => {
   const calculateProjectedWageExpense = (range, view) => {
     let startDateRange;
     let endDateRange;
-    // console.log(range)
-    // console.log(range.start)
-    // console.log(moment(range.start))
-    // console.log(moment(range.start).startOf('month'))
-
+  
     // Calculate appropriate startDateRange and endDateRange based on the current view
     switch (view) {
-      case 'month':
-        // console.log(range.start)
-        // console.log(range)
-        // console.log(range.end)
+      case 'month': //this returns an object with a 'start' property and an 'end' property, each a date object
         startDateRange = moment(range.start).startOf('month')._i;
         endDateRange = moment(range.end).endOf('month')._i;
         break;
-      case 'week':
-        // console.log(range)
+
+      case 'week': //This returns its range as an array of 7 date objects instead of an object with just a 'start' and 'end' like the 'month' view
         startDateRange = moment(range.start).startOf('week')._d;
         endDateRange = moment(range.end).endOf('week')._d;
         break;
-      case 'day':
-        // console.log(range)
+
+        
+      case 'day': //similar to the 'week' view, this also returns an array, but containing just one date object for that day
         startDateRange = moment(range[0])._i;
-        endDateRange = moment(add(new Date(range), { days: 1 }))._i
-        // console.log(startDateRange)
-        // console.log(endDateRange)
+        endDateRange = moment(add(new Date(range[0]), { days: 1 }))._i;
         break;
-      default:
-        // Handle other views if needed
-        startDateRange = moment(range.start);
-        endDateRange = moment(range.end);
-        break;
+
+        default: //This case is applied when navigating using 'next' or 'previous'. Since each view returns a 'range' of different type (month -> object, week -> array of 7 dates, day -> array of 1 date), we need to apply different rule-sets based on the range type
+          if (Array.isArray(range)) {
+            if (range.length === 1) { //applied when the range is that of a day view
+              // Handle 'day' view navigation
+              startDateRange = moment(range[0]).startOf('day').toDate();
+              endDateRange = moment(startDateRange).add(1, 'day').toDate();
+            } else {  //applied when the range is that of a week view
+              // Handle other view navigation
+              startDateRange = moment(range[0]).startOf(view).toDate();
+              endDateRange = moment(range[range.length - 1]).endOf(view).toDate();
+            }
+          } else { //applied when the range is that of a month
+            startDateRange = range.start;
+            endDateRange = range.end;
+          }
+          break;
     }
-    // console.log(startDateRange)
-    // console.log(endDateRange)
-    
+    console.log(startDateRange)
+    console.log(endDateRange)
+  
     const newProjectedWageExpense = shifts
       .filter((shift) => {
         const shiftStartDate = moment(shift.start);
@@ -152,8 +156,12 @@ const Roster = ({ shifts }) => {
         endAccessor="end"
         style={{ height: 800 }}
         onView={(view) => setCurrentView(view)}
+        // onView={handleRangeChange}
+        // onRangeChange={console.log('RangeChange')}
         onRangeChange={handleRangeChange}
+        // onNavigate={console.log('Navigate')}
         onNavigate={handleRangeChange}
+        // onNavigate={(view) => handleRangeChange(view)}
       />
     </div>
   );
