@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react'
 import { Routes, Route, useParams, useNavigate } from 'react-router-dom'
 import Overview from './Overview'
 import UpdateShift from './UpdateShift'
+import ViewEmployee from './ViewEmployee'
 import NavBar from './NavBar'
 import Employees from './Employees'
 import Roster from './Roster'
 import NewEmployee from './NewEmployee'
 import UpdateEmployee from './UpdateEmployee'
-import Addshift from './NewShift'
+import EmployeePage from './EmployeePage'
+import NewShift from './NewShift'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
@@ -34,12 +36,19 @@ const App = () => {
     // Find the employee whose _id matches the id from the URL parameters
     const selectedEmployee = employees.find(emp => emp._id === id);
   
-    console.log(employees);  // Logs all employees in the state
-    console.log(id);  // Logs the ID from the URL parameters
-    console.log(selectedEmployee);  // Logs the selected employee    
     return selectedEmployee 
-      ? <UpdateEmployee employee={selectedEmployee} updateEmployee={updateEmployee} id={id} handleDelete={handleDelete} /> 
-      : <div>Loading...</div>
+    ? (
+        <>
+          <UpdateEmployee 
+            employee={selectedEmployee} 
+            updateEmployee={updateEmployee} 
+            id={id} 
+            handleDelete={handleDelete} 
+          />
+          <ViewEmployee employee={selectedEmployee} shifts={shifts} />
+        </>
+      ) 
+    : <div>Loading...</div>
 
   }
   
@@ -136,28 +145,62 @@ const App = () => {
     })()
   }, [])
 
-  // Allow Routes to Access ID variables from Shifts
   function ShowShiftWrapper() {
-  const { id } = useParams()
-  const shift_id = id
-  const selectedshift = shifts[id]
-  return <UpdateShift shift={selectedshift} updateShift={updateShift} id={shift_id}/>
+    const { id } = useParams()
+    const selectedShift = shifts.find(shift => shift._id == id)
+   return selectedShift ? (<UpdateShift employees= {employees} shift={selectedShift} updateShift={updateShift} deleteShift={deleteShift}/>
+    ): (<div>Loading...</div>)
   }
-
-  //Shift Creation
-  const addShift = (newShift) => {
-    setShifts(CurrentShifts => [...CurrentShifts, newShift]);
-  };
-
-  // Shift Updating
-  const updateShift = (updatedShift) => {
-    setShifts((shifts) => {
-      return shifts.map((shift, index) =>
-        index === updatedShift.id ? updatedShift : shift
-      )
-    })
-  }
-
+  
+//Shift Creation
+    async function addShift( { employee, startDate, startTime, start, endDate, endTime, end, pause }) {
+      // const id = shifts.length
+      // Add a new entry
+        const returnedShift= await fetch('http://localhost:4001/roster/new', {
+          method: 'POST',
+          body: JSON.stringify({ employee, startDate, startTime, start, endDate, endTime, end, pause }),
+          headers: { "Content-Type": "application/json" }
+        })
+        
+        setShifts([...shifts, await returnedShift.json()])
+        nav("/roster/")
+        reload()
+      
+      }
+    // Shift Update
+    async function updateShift(updatedShift) {
+      const response = await fetch(`http://localhost:4001/roster/${updatedShift._id}`, {
+          method: 'PUT',
+          body: JSON.stringify(updatedShift),
+          headers: { "Content-Type": "application/json" }
+        });
+        
+          const updatedShiftData = await response.json();
+          setShifts((prevShifts) =>
+            prevShifts.map((shift) =>
+              shift._id == updatedShiftData._id ? updatedShiftData : shift
+            )
+          )
+          nav("/roster/")
+          reload()
+        }
+  // Shift Delete
+        const deleteShift = async (shift) => {
+          console.log(shift)
+          if (window.confirm('Are you sure you want to delete this shift?')) {
+            try {
+              await fetch(`http://localhost:4001/roster/${shift._id}`, {
+                method: 'DELETE',
+              });
+              setShifts([shifts])
+              nav("/roster/")
+              reload()
+            } catch (error) {
+              console.error('Error deleting shift:', error);
+            }
+          }
+        };
+  
 
 // Routes
   return (
@@ -166,17 +209,19 @@ const App = () => {
       <Routes>
         
         {/* Overview */}
-        <Route path='/' element={<Overview />} />
+        <Route path='/' element={<Overview employees={employees} shifts={shifts} />} />
         
         {/* Employees Routes */}
         <Route path='/employees' element={<Employees employees={employees}  />} />
           <Route path='/employees/new' element={<NewEmployee addEmployee={addEmployee} />}/>
-        <Route path='/employee/:id' element={<ShowEmployeeWrapper employees={employees} updateEmployee={updateEmployee} handleDelete = {handleDelete}/>} />
+          <Route path='/employee/:id' element={<EmployeePage employees={employees} shifts={shifts} updateEmployee={updateEmployee} handleDelete={handleDelete} />} />
+
+        {/* <Route path='/employee/:id' element={<ShowEmployeeWrapper employees={employees} updateEmployee={updateEmployee} handleDelete = {handleDelete}/>} /> */}
         
         {/* Roster & Shift Paths */}
         <Route path='/roster' element={<Roster shifts={shifts} />} />
-        <Route path='/shift/new' element={<Addshift addShift={addShift}/>} />
-        <Route path='/shift/:id' element={<ShowShiftWrapper shifts={shifts} updateShift={updateShift}/> } />
+        <Route path='/roster/new' element={<NewShift addShift={addShift} employees={employees}/>} />
+        <Route path='/roster/:id' element={<ShowShiftWrapper /> } />
 
         {/* Catch-all for invalid URLs */}
         <Route path='*' element= {<h3>Page Not Found</h3>} /> 

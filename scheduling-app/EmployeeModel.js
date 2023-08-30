@@ -58,23 +58,13 @@ const employeesSchema = new mongoose.Schema({
   }
 })
 
-// Individual deletion
-employeesSchema.pre("findOneAndDelete", async function(next) {
-  const doc = await this.model.findOne(this.getQuery());
-  if (doc) {
-    await ShiftModel.deleteMany({ employee: doc._id });
-  }
-  next();
-});
-
-// Bulk deletion
+// schema "pre" method to cascade delete
 employeesSchema.pre("deleteOne", { document: false, query: true }, async function(next) {
-  const docs = await this.model.find(this.getFilter());
-  const users = docs.map((item) => item._id);
-  await ShiftModel.deleteMany({ employee: { $in: users } });
-  next();
-});
-
+  const docs = await this.model.find(this.getFilter())
+  const users = docs.map((item) => item._id)
+  await ShiftModel.deleteMany({ employee: { $in: users } })
+  next()
+})
 
 // creating a model based on the employees schema
 const EmployeeModel = mongoose.model('Employee', employeesSchema)
