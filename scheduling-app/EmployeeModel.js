@@ -23,9 +23,9 @@ const employeesSchema = new mongoose.Schema({
   phone:{ type: Number, required: true },
   dob: {
     type: String,
-    required: true,
+    required: [true, "DOB required"],
     validate: {
-        // checking if the date format is valid with "luxon" library
+        // checking if the date format is valid with "date-fns" library
         // Datetime function will parse and validate the incoming value (date)
         // accoring to the format provided as the second parameter
         //  isValid method will return a boolean value indicating whether the date adheres to the format
@@ -56,6 +56,18 @@ const employeesSchema = new mongoose.Schema({
     
   }
 })
+
+employeesSchema.pre('deleteOne', { document: false, query: true }, async function(next) {
+  const employeeId = this.getQuery()["_id"];
+  try {
+      await mongoose.model('Shift').deleteMany({ employee: employeeId });
+      next();
+  } catch (error) {
+      next(error);
+  }
+});
+
+
 
 // creating a model based on the employees schema
 const EmployeeModel = mongoose.model('Employee', employeesSchema)
