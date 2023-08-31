@@ -1,8 +1,8 @@
 import { Router } from 'express'
 import { EmployeeModel } from '../EmployeeModel.js'
 import { ShiftModel } from '../ShiftModel.js'
-import parse from 'date-fns';
-import isValid from 'date-fns';
+
+
 
 // creating a new router object
 const router = Router()
@@ -12,36 +12,31 @@ router.get('/', async (req, res) => {
     // Since no date range is specified, we simply find all shifts
     const shifts = await ShiftModel.find()
       // Populate the 'employee' field with only 'name' and 'email'
-      .populate('employee', 'name email');
-
+      .populate('employee', 'name email')
     // Send the shift details back to the client
-    res.send(shifts);
+    res.send(shifts)
   } catch (err) {
     // In case of an error, send an error message back
-    res.status(500).send({ error: err.message });
+    res.status(500).send({ error: err.message })
   }
-});
-
+})
 
 //Get specified shift
 router.get('/:id', async (req, res) => {
   try {
     const shifts = await ShiftModel.findById(req.params.id)
       // Populate the 'employee' field with only 'name' and 'email'
-      .populate('employee', 'name email');
-      
-
+      .populate('employee', 'name email')
     // Send the shift details back to the client
-    res.send(shifts);
+    res.send(shifts)
   } catch (err) {
     // In case of an error, send an error message back
-    res.status(500).send({ error: err.message });
+    res.status(500).send({ error: err.message })
   }
-});
-
+})
 
 // creating a new shift 
-router.post('/', async (req, res) => {
+router.post('/new', async (req, res) => {
   try {
     // storing new shift in the variable newShift
     const newShift = await ShiftModel.create(req.body)

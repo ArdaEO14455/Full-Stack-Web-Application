@@ -1,4 +1,4 @@
-import React from 'react';
+import React from 'react'
 import { useParams } from 'react-router-dom'
 import UpdateEmployee from './UpdateEmployee'
 import ViewEmployee from './ViewEmployee'
@@ -28,4 +28,4 @@ function EmployeePage({ employees, shifts, updateEmployee, handleDelete }) {
     : <div>Loading...</div>
 }
 
-export default EmployeePage;
+export default EmployeePage

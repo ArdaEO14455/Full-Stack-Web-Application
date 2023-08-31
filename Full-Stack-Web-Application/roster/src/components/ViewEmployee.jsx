@@ -1,6 +1,6 @@
 import React from 'react';
 import moment from 'moment';
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 
 const ViewEmployee = ({ employee, shifts }) => {
@@ -28,8 +28,8 @@ const ViewEmployee = ({ employee, shifts }) => {
         <h4>Employee not Found!</h4>
       )}
     </div>
-  );
-};
+  )
+}
 
 export default ViewEmployee;
 

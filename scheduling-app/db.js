@@ -10,7 +10,7 @@ async function dbClose() {
   console.log('Database disconnected')
  }
 
-//  accessing the environment variables with process.env to connect to the database
+// accessing the environment variables with process.env to connect to the database
 mongoose.connect(process.env.ATLAS_DB_URL)
   .then(m => console.log(m.connection.readyState === 1 ? 'Mongoose connected' : 'Mongoose failed'))
   .catch(err => console.error(err))

@@ -1,24 +1,24 @@
-import React, { useState } from 'react';
-import moment from 'moment';
+import React, { useState } from 'react'
+import moment from 'moment'
 
 const NewShift = ({ addShift, employees }) => {
 
 
-  const [employee, setEmployee] = useState('');
-  const [startDate, setStartDate] = useState('');
-  const [startTime, setStartTime] = useState('');
-  const [endDate, setEndDate] = useState('');
-  const [endTime, setEndTime] = useState('');
-  const [pause, setPause] = useState('');
+  const [employee, setEmployee] = useState('')
+  const [startDate, setStartDate] = useState('')
+  const [startTime, setStartTime] = useState('')
+  const [endDate, setEndDate] = useState('')
+  const [endTime, setEndTime] = useState('')
+  const [pause, setPause] = useState('')
 
   const submit = (e) => {
-    e.preventDefault();
+    e.preventDefault()
 
     // // Combine date and time for start and end
-    const start = moment(`${startDate} ${startTime}`, 'YYYY-MM-DD HH:mm').toDate();
+    const start = moment(`${startDate} ${startTime}`, 'YYYY-MM-DD HH:mm').toDate()
 
     // // If the end time is on the next day, add one day to the end date
-    const end = moment(`${endDate} ${endTime}`, 'YYYY-MM-DD HH:mm').toDate();
+    const end = moment(`${endDate} ${endTime}`, 'YYYY-MM-DD HH:mm').toDate()
    
     const newShift = {
       employee,
@@ -36,7 +36,7 @@ const NewShift = ({ addShift, employees }) => {
       //Break
       pause,
     };
-    addShift(newShift);
+    addShift(newShift)
   };
 
   return (
@@ -115,7 +115,7 @@ const NewShift = ({ addShift, employees }) => {
         <button type="submit" className="btn btn-primary mt-3 container-lg">Add shift</button>
       </form>
     </>
-  );
-};
+  )
+}
 
 export default NewShift;

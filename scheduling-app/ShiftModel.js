@@ -9,11 +9,9 @@ const shiftsSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-        // checking if the date format is valid with date-fns library
         validator: function(v) {
-          // parse function will parse and validate the incoming value (date)
-          // accoring to the format provided as the second parameter
-          const parsedDate = parse(v, 'yyyy-MM-dd', new Date());
+          // Using fns's parse function to validate and parse the date
+          const parsedDate = parse(v, 'yyyy-MM-dd', new Date())
           // isValid method will return a boolean value indicating whether the date adheres to the format
           return isValid(parsedDate)
         },
@@ -22,19 +20,19 @@ const shiftsSchema = new mongoose.Schema({
   }},
   startTime: { type: String, required: true },
   start: {type: String, required: true },
-
   endDate: {
     type: String,
     required: true,
     validate: {
         validator: function(v) {
-          const parsedDate = parse(v, 'yyyy-MM-dd', new Date());
+          const parsedDate = parse(v, 'yyyy-MM-dd', new Date())
           return isValid(parsedDate)
         },
       message: 'Date must be in the format yyyy-MM-dd',
   }},
   endTime: { type: String, required: true },
   end: {type: String, required: true },
+
   pause: { type: Number, required: true },
   
 })

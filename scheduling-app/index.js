@@ -12,9 +12,8 @@ const port = 4001
 // middleware to allow access to the routes
 app.use(cors())
 
+// parsing incoming requests with express.json
 app.use(express.json())
-
-app.get('/', (req, res) => res.send({ name: ""}))
 
 // attaching all the employees routes to the application
 app.use('/employees', employeeRoutes)

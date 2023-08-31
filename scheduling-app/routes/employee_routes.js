@@ -1,9 +1,7 @@
 import { Router } from 'express'
 import { EmployeeModel } from '../EmployeeModel.js'
 import { ShiftModel } from '../ShiftModel.js'
-import { format, parseISO, isValid} from 'date-fns'
-
-
+import { format, parseISO } from 'date-fns'
 
 // creating a new router object
 const router = Router()
@@ -76,8 +74,6 @@ router.post('/', async (req, res) => {
 //   }
 // });
 
-
-
 //  a route to edit data of an individual employee
 router.put('/:id', async (req, res) => {
   try {
@@ -86,14 +82,12 @@ router.put('/:id', async (req, res) => {
     //parsing the incoming data into the correct format
     if (updatedData.dob) {
       try {
-          updatedData.dob = format(parseISO(updatedData.dob), 'dd-MM-yyyy');
+          updatedData.dob = format(parseISO(updatedData.dob), 'dd-MM-yyyy')
       } catch (e) {
-          return res.status(400).send({ error: 'Invalid date format for DOB' });
+          return res.status(400).send({ error: 'Invalid date format for DOB' })
       }
   }
-    // const { id } = req.params;
-    // const updatedData = req.body
-    // find an employee by id (without the shift details) and update it
+    // find an employee by id and update it
     // validating the incoming data with the runValidators property 
     const employee = await EmployeeModel.findByIdAndUpdate( id, updatedData, { new: true, runValidators: true })
     // if employee is found
@@ -113,20 +107,20 @@ router.put('/:id', async (req, res) => {
 // deleting an employee by id
 router.delete('/:id', async (req, res) => {
   try {
-    const deleteResult = await EmployeeModel.deleteOne({ _id: req.params.id });
-    console.log(deleteResult)
-    console.log(deleteResult.n);  // Log the value
-
+    // deleteOne to delete an object with a specified id 
+    const deleteResult = await EmployeeModel.deleteOne({ _id: req.params.id })
+    // if at least 1 document was deleted
     if (deleteResult.deletedCount > 0) {
-      res.sendStatus(200);
+      // send a status code 200
+      res.sendStatus(200)
     } else {
-      res.status(404).send({ error: 'Employee not found' });
+      res.status(404).send({ error: 'Employee not found' })
     }
   }
   catch(err) {
-    res.status(500).send({ error: err.message });
+    res.status(500).send({ error: err.message })
   }
-});
+})
 
 
 

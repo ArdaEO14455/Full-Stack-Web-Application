@@ -1,22 +1,22 @@
-import React, { useState } from 'react';
-import { parse, addDays } from 'date-fns';
+import React, { useState } from 'react'
+import { parse, addDays } from 'date-fns'
 
 const UpdateShift = ({ shift, updateShift, employees, deleteShift }) => {
-  const [employee, setEmployee] = useState(shift.employee);
-  const [startDate, setStartDate] = useState(shift.startDate);
-  const [startTime, setStartTime] = useState(shift.startTime);
-  const [endDate, setEndDate] = useState(shift.endDate);
-  const [endTime, setEndTime] = useState(shift.endTime);
-  const [pause, setPause] = useState(shift.pause);
+  const [employee, setEmployee] = useState(shift.employee)
+  const [startDate, setStartDate] = useState(shift.startDate)
+  const [startTime, setStartTime] = useState(shift.startTime)
+  const [endDate, setEndDate] = useState(shift.endDate)
+  const [endTime, setEndTime] = useState(shift.endTime)
+  const [pause, setPause] = useState(shift.pause)
 
   const submit = (e) => {
-    e.preventDefault();
+    e.preventDefault()
 
-    const start = parse(`${startDate} ${startTime}`, 'yyyy-MM-dd HH:mm', new Date());
+    const start = parse(`${startDate} ${startTime}`, 'yyyy-MM-dd HH:mm', new Date())
 
-    let end = parse(`${endDate} ${endTime}`, 'yyyy-MM-dd HH:mm', new Date());
+    let end = parse(`${endDate} ${endTime}`, 'yyyy-MM-dd HH:mm', new Date())
     if (end < start) {
-      end = addDays(end, 1);
+      end = addDays(end, 1)
     }
 
     const updatedShift = {
@@ -29,12 +29,12 @@ const UpdateShift = ({ shift, updateShift, employees, deleteShift }) => {
       endTime,
       end,
       pause,
-    };
-    updateShift(updatedShift);
+    }
+    updateShift(updatedShift)
   };
 
   const shiftDelete = (e) => {
-    e.preventDefault();
+    e.preventDefault()
     deleteShift(shift)
   }
 
@@ -133,7 +133,7 @@ const UpdateShift = ({ shift, updateShift, employees, deleteShift }) => {
     </>
   ) : (
     <h4>Shift not found</h4>
-  );
-};
+  )
+}
 
-export default UpdateShift;
+export default UpdateShift

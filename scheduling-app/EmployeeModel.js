@@ -1,7 +1,5 @@
 import mongoose from 'mongoose'
-import parse from 'date-fns/parse/index.js';
-import isValid from 'date-fns/isValid/index.js';
-import { ShiftModel } from './ShiftModel.js';
+import { ShiftModel } from './ShiftModel.js'
 
 //  employees schema with the validation rules for the fields
 // defining the structure of the model Employee
@@ -13,6 +11,9 @@ const employeesSchema = new mongoose.Schema({
     validate: {
       // validator function tests the email for the correct formatting  
         validator: function(v) {
+          // if a value is being provided
+          if (!v) return true
+          // testing if the incoming value has special characters
           return /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(v)
         },
         // if it returns false, this message will be displayed
@@ -24,15 +25,10 @@ const employeesSchema = new mongoose.Schema({
     type: String,
     required: false,
     validate: {
-        validator: function(v){
+      validator: function(v){
           if (!v) return true
           return /^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-\d{4}$/.test(v)
         },    
-        // function(v) {
-        //     if (!v || v === "dd/mm/yyyy") return false
-        //     const parsedDate = parse(v, 'dd-MM-yyyy', new Date())
-        //     return isValid(parsedDate)
-        // },
         message: 'DOB must be in the format DD-MM-YYYY',
     },
   },
@@ -45,11 +41,10 @@ const employeesSchema = new mongoose.Schema({
     validate: {
       validator: function(v) {
         // Convert the incoming value to lowercase and compare
-        return ['full-time', 'part-time', 'casual'].includes(v.toLowerCase());
+        return ['full-time', 'part-time', 'casual'].includes(v.toLowerCase())
       },
-      message: 'Contract type must be Full-time, Part-time  or Casual'
-    }
-    
+        message: 'Contract type must be Full-time, Part-time  or Casual'
+    }   
   }
 })
 
@@ -57,9 +52,11 @@ const employeesSchema = new mongoose.Schema({
 employeesSchema.pre("deleteOne", { document: false, query: true }, async function(next) {
   // fetching the documents matching the criteria
   const docs = await this.model.find(this.getFilter())
-  // mapping through employees 
+  // mapping through employees and extracting their ids into an array
   const employeesArray = docs.map((employee) => employee._id)
+  // deleting all shift documents matching the employee
   await ShiftModel.deleteMany({ employee: { $in: employeesArray } })
+  // calling the next middleware in the chain
   next()
 })
 

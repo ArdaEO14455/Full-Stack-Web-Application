@@ -1,7 +1,4 @@
 import React, { useState } from 'react'
-import format from 'date-fns/format'
-import parse from 'date-fns/parse'
-
 
 const NewEmployee = ({ addEmployee }) => {
   const [name, setName] = useState('')
@@ -38,6 +35,7 @@ const NewEmployee = ({ addEmployee }) => {
     setWage('')
     setContract('')
 }
+
 const handleDOBInputChange = (value) => {
   if (value.length === 2 || value.length === 5) {
     setDob(value + '-')
