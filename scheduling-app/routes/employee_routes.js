@@ -1,7 +1,9 @@
 import { Router } from 'express'
 import { EmployeeModel } from '../EmployeeModel.js'
 import { ShiftModel } from '../ShiftModel.js'
-import { format, parseISO} from 'date-fns'
+import { format, parseISO, isValid} from 'date-fns'
+
+
 
 // creating a new router object
 const router = Router()
@@ -45,13 +47,50 @@ router.post('/', async (req, res) => {
   }
 })
 
+// router.put('/:id', async (req, res) => {
+//   try {
+//     const { id } = req.params;
+//     const updatedData = req.body;
+//     if (updatedData.dob) {
+//         const parsedDate = parseISO(updatedData.dob);
+//         if (!isValid(parsedDate)) {
+//             return res.status(400).send({ error: 'Invalid date format for DOB' });
+//         }
+//         updatedData.dob = format(parsedDate, 'dd-MM-yyyy');
+//     }
+//     // Update the employee in the database
+//     const employee = await EmployeeModel.findByIdAndUpdate(
+//       id, 
+//       updatedData, 
+//       { new: true, runValidators: true }
+//     )
+//     // Respond with the updated employee if successful
+//     if (employee) {
+//       res.send(employee);
+//     } else {
+//       res.status(404).send({ error: 'Employee not found' });
+//     }
+//   } catch(err) {
+//     console.error("Error updating employee:", err);
+//     res.status(500).send({ error: err.message });
+//   }
+// });
+
+
+
 //  a route to edit data of an individual employee
 router.put('/:id', async (req, res) => {
   try {
     const { id } = req.params
     const updatedData = req.body
     //parsing the incoming data into the correct format
-    updatedData.dob = format(parseISO(updatedData.dob), 'dd-MM-yyyy')
+    if (updatedData.dob) {
+      try {
+          updatedData.dob = format(parseISO(updatedData.dob), 'dd-MM-yyyy');
+      } catch (e) {
+          return res.status(400).send({ error: 'Invalid date format for DOB' });
+      }
+  }
     // const { id } = req.params;
     // const updatedData = req.body
     // find an employee by id (without the shift details) and update it

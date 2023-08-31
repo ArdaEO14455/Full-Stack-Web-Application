@@ -91,8 +91,9 @@ const App = () => {
         body: JSON.stringify(updatedEmployee),
       })
       const data = await response.json();
+      console.log(data)
       if (!response.ok) {
-        throw new Error(data.message || 'Error updating data');
+        throw new Error('Error updating data');
       } 
       // Update local state with the returned data from the server
       setEmployees(prevEmployees => {

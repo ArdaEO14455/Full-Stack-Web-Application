@@ -8,9 +8,6 @@ const shiftsSchema = new mongoose.Schema({
     type: String,
     required: true,
     validate: {
-        // checking if the date format is valid with "luxon" library
-        // Datetime function will parse and validate the incoming value (date)
-        // accoring to the format provided as the second parameter
         //  isValid method will return a boolean value indicating whether the date adheres to the format
         validator: function(v) {
           // Using fns's parse function 

@@ -18,27 +18,22 @@ const employeesSchema = new mongoose.Schema({
         // if it returns false, this message will be displayed
         message: "Please enter a valid email"
     },
-    // if email isnt provided, the error message will be displayed
-    required: [true, "Email required"]
     },
-  phone:{ type: Number, required: true },
+  phone: { type: Number },
   dob: {
     type: String,
-    required: [true, "DOB required"],
+    required: false,
     validate: {
-        // checking if the date format is valid with "date-fns" library
-        // Datetime function will parse and validate the incoming value (date)
-        // accoring to the format provided as the second parameter
-        //  isValid method will return a boolean value indicating whether the date adheres to the format
-         validator: function(v) {
-          // Using fns's parse function 
-          const parsedDate = parse(v, 'dd-MM-yyyy', new Date())
-          // isValid method will return a boolean value indicating whether the date adheres to the format
-          return isValid(parsedDate)
-        // isValid method will return a boolean value indicating whether the date adheres to the format
-      },
-      // if it returns false, the message below will be displayed
-      message: 'DOB must be in the format DD-MM-YYYY',
+        validator: function(v){
+          if (!v) return true
+          return /^(0[1-9]|[12][0-9]|3[01])-(0[1-9]|1[0-2])-\d{4}$/.test(v)
+        },    
+        // function(v) {
+        //     if (!v || v === "dd/mm/yyyy") return false
+        //     const parsedDate = parse(v, 'dd-MM-yyyy', new Date())
+        //     return isValid(parsedDate)
+        // },
+        message: 'DOB must be in the format DD-MM-YYYY',
     },
   },
   wage: { type: Number, required: true },

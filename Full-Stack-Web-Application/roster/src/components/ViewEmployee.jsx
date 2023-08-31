@@ -1,38 +1,36 @@
 import React from 'react';
-import { Calendar, momentLocalizer } from 'react-big-calendar';
 import moment from 'moment';
-import 'react-big-calendar/lib/css/react-big-calendar.css';
+import { Link, useNavigate } from 'react-router-dom'
 
-
-const localizer = momentLocalizer(moment)
 
 const ViewEmployee = ({ employee, shifts }) => {
-  // filtering shifts so they match the selected employee
   const employeeShifts = shifts.filter(shift => shift.employee._id === employee._id);
-
-
-  const events = employeeShifts.map(shift => {
-    return {
-      title: `${employee.name}'s Shift`,
-      start: new Date(shift.startDate),
-      end: new Date(shift.endDate),
-      break: new Date(shift.pause)
-    };
-  });
-
-  return employee ? (
-    <>
-      <Calendar
-        localizer={localizer}
-        events={events}
-        startAccessor="start"
-        endAccessor="end"
-        style={{ height: 600 }}
-      />
-    </>
-  ) : (
-    <h4>Employee not Found!</h4>
+  const navigate = useNavigate()
+  const goToEditShift = (shiftId) => {
+    navigate(`/roster/${shiftId}`)
+  }
+  return (
+    <div>
+      {employee ? (
+        <div>
+          <h2>{employee.name}'s Shifts:</h2>
+          {employeeShifts.map((shift, index) => (
+            <div key={index}>
+              <h4> Date: {shift.startDate} - {shift.endDate}<br /></h4>
+              <h5>Start Time: {moment(`${shift.date} ${shift.start}`, 'DD-MM-YYYY HH:mm').format('HH:mm')} <br /></h5>
+              <h5>End Time: {moment(`${shift.date} ${shift.end}`, 'DD-MM-YYYY HH:mm').format('HH:mm')} <br /></h5>
+              <h5>Break: {shift.pause} minutes</h5>
+              <button type="button" onClick={() => goToEditShift(shift._id)} style={{ color: 'black' }} className="btn btn-primary mt-3 container-lg">Edit Shift</button>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <h4>Employee not Found!</h4>
+      )}
+    </div>
   );
 };
 
 export default ViewEmployee;
+
+

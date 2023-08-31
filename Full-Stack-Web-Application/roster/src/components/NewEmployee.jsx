@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-
+import format from 'date-fns/format'
+import parse from 'date-fns/parse'
 
 
 const NewEmployee = ({ addEmployee }) => {
@@ -11,24 +12,23 @@ const NewEmployee = ({ addEmployee }) => {
   const [contract, setContract] = useState('')
 
 
-
   const submit = (e) => {
-    // formatting the date to a dd-mm-yyyy format
-    const [year, month, day] = dob.split("-")
-    const formattedDob = `${day}-${month}-${year}`
 
     e.preventDefault()
+
     // creating a new employee object
     const newEmployee = {
       name,
       email,
       phone,
-      dob: formattedDob,
       wage,
       contract
     }
 
-
+    if (dob) {
+      newEmployee.dob = dob
+    }
+    
     addEmployee(newEmployee)
     // Reset form fields
     setName('')
@@ -37,6 +37,13 @@ const NewEmployee = ({ addEmployee }) => {
     setDob('')
     setWage('')
     setContract('')
+}
+const handleDOBInputChange = (value) => {
+  if (value.length === 2 || value.length === 5) {
+    setDob(value + '-')
+  } else {
+    setDob(value)
+  }
 }
   return (
     <>
@@ -58,24 +65,21 @@ const NewEmployee = ({ addEmployee }) => {
     <input id="emailInput" value={email} onChange={e => setEmail(e.target.value)} 
       className="form-control" 
       type="email" 
-      placeholder="E.g.abc123@gmail.com" 
-      required/>
+      placeholder="E.g.abc123@gmail.com" />
 
     {/* Phone Field */}
     <label htmlFor="phoneInput" className="form-label">Phone Number</label>
     <input id="phoneInput" value={phone} onChange={e => setPhone(e.target.value)} 
       className="form-control form-control-sm" 
       type="tel" 
-      placeholder="E.g. +61412123456"
-      required />
+      placeholder="E.g. +61412123456" />
 
     {/* DOB Field */}
     <label htmlFor="dobInput" className="form-label">Date of Birth</label>
-    <input id="dobInput" value={dob} onChange={e => setDob(e.target.value)} 
+    <input id="dobInput" value={dob} onChange={e => handleDOBInputChange(e.target.value)}
       className="form-control form-control-sm" 
-      type="date" 
-      placeholder="E.g. 01-01-2000"
-      required />
+      type="text" 
+      placeholder="E.g. 01-01-2000" />
 
     {/* Wage Field */}
     <label htmlFor="wageInput" className="form-label">Hourly Wage ($/Hr)</label>

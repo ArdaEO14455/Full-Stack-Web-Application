@@ -1,4 +1,6 @@
 import React, { useState } from 'react'
+import format from 'date-fns/fp/format'
+import parse from 'date-fns/parse'
 
 const UpdateEmployee = ({ employee, updateEmployee, id, handleDelete} ) => {
 
@@ -10,36 +12,40 @@ const UpdateEmployee = ({ employee, updateEmployee, id, handleDelete} ) => {
   const [contract, setContract] = useState(employee.contract)
 
 
+
   const submit = (e) => {
     e.preventDefault()
+    const convertDateToBackendFormat = (dateStr) => {
+      const [day, month, year] = dateStr.split("-");
+      return `${year}-${month}-${day}`;
+    }    
+    const formattedDOB = dob ? convertDateToBackendFormat(dob) : null
 
     const updatedEmployee = {
       name,
+      dob: formattedDOB,
       email,
       phone,
-      dob,
       wage,
       contract
     }
-
+  
   updateEmployee(id, updatedEmployee)
     
-      // Reset form fields
-      // setName('');
-      // setEmail('');
-      // setPhone('');
-      // setDob('');
-      // setWage('');
-      // setContract('')
-   
-  };
+  }
   
   const onDeleteClick = (e) => {
     e.preventDefault()
     handleDelete(id)
     }
   
-
+const handleDOBInputChange = (value) => {
+  if (value.length === 2 || value.length === 5) {
+    setDob(value + '-')
+  } else {
+    setDob(value)
+  }
+}
   return employee ? ( 
   <>
     <h1 className="row justify-content-center"
@@ -84,9 +90,10 @@ const UpdateEmployee = ({ employee, updateEmployee, id, handleDelete} ) => {
       <input
           id="endTimeInput"
           value={dob}
-          onChange={e => setDob(e.target.value)}
+          onChange={e => handleDOBInputChange(e.target.value)}
           className="form-control form-control-sm"
-          type="date"
+          type="text"
+          placeholder = "dd-MM-yyyy"
         />
 
         {/* Break Field */}
