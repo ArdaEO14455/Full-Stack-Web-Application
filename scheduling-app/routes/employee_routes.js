@@ -37,7 +37,7 @@ router.post('/', async (req, res) => {
     // storing a new employee object in a variable "newEmployee"
     const newEmployee = await EmployeeModel.create(req.body)
     // responding with a new employee object
-    res.send(newEmployee)
+    res.status(201).send(newEmployee)
   }
   catch(err){
     // respond with a status code 500, displaying an error message in case it fails
