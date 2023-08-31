@@ -1,7 +1,8 @@
-import app from './app.js'
+import app from '../app.js'
 import request from 'supertest'
 
-describe('App tests', () => {
+describe('Employee routes', () => {
+  let res
 
   test('Create a new employee', async () =>{
     const res = await request(app).post('/employees').send({
@@ -12,9 +13,6 @@ describe('App tests', () => {
     expect(res.status).toBe(201)
   })
   
-  describe('GET /employees', () =>{
-    let res
-
     beforeEach(async () => {
       res = await request(app).get('/employees') 
     })
@@ -40,4 +38,4 @@ describe('App tests', () => {
       expect(res.body[0]._id).toHaveLength(24)
     })
   })
-})
+
