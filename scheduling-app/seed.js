@@ -4,21 +4,22 @@ import { dbClose } from './db.js'
 
 
 await ShiftModel.deleteMany()
+
 // declaring a variable "shifts" that will store objects containing date, start, end and pause properties in each
-const shifts = [
-{ date: '21-08-2023', start: '09:00', end: '17:00', pause: 30 },
-{ date: '22-08-2023', start: '10:00', end: '18:00', pause: 60 },
-{ date: '21-08-2023', start: '11:00', end: '19:00', pause: 30 },
-{ date: '23-08-2023', start: '15:00', end: '23:00', pause: 60 },
-{ date: '23-08-2023', start: '09:00', end: '17:00', pause: 30 },
-{ date: '24-08-2023', start: '10:00', end: '18:00', pause: 60 }
-]
-//  deleting the documents from the Shift collection
-console.log('Deleted shifts')
-// inserting the array of objects (shifts) into the Shift collection
-// and storing the array of inserted documents in shiftsArray variable
-const shiftsArray = await ShiftModel.insertMany(shifts)
-console.log('Inserted shifts')
+// const shifts = [
+// { date: '21-08-2023', start: '09:00', end: '17:00', pause: 30 },
+// { date: '22-08-2023', start: '10:00', end: '18:00', pause: 60 },
+// { date: '21-08-2023', start: '11:00', end: '19:00', pause: 30 },
+// { date: '23-08-2023', start: '15:00', end: '23:00', pause: 60 },
+// { date: '23-08-2023', start: '09:00', end: '17:00', pause: 30 },
+// { date: '24-08-2023', start: '10:00', end: '18:00', pause: 60 }
+// ]
+// //  deleting the documents from the Shift collection
+// console.log('Deleted shifts')
+// // inserting the array of objects (shifts) into the Shift collection
+// // and storing the array of inserted documents in shiftsArray variable
+// const shiftsArray = await ShiftModel.insertMany(shifts)
+// console.log('Inserted shifts')
 
 const employees = [
   {name: "John", email:"john@gmail.com", phone: "2113143234", dob: "13-10-1980", wage: 26.0, contract: "Part-time", shifts: [shiftsArray[0], shiftsArray[1]]},
@@ -29,12 +30,13 @@ const employees = [
 //  deleting the documents from the Employee collection 
 await EmployeeModel.deleteMany()
 console.log('Deleted employees')
-// seeding the Employee collection with the objects from the employees array
+// // seeding the Employee collection with the objects from the employees array
 const employeesArray = await EmployeeModel.insertMany(employees)
 console.log('Inserted employees')
 
 // looping through each shift document of employee object
 // and updating it by storing the employee id in each shift
+
 for(let i = 0; i < employeesArray.length; i++) {
   const employeeShifts = employeesArray[i].shifts
   for(let shiftId of employeeShifts) {

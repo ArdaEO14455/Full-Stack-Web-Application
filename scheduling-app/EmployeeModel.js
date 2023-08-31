@@ -1,13 +1,18 @@
 import mongoose from 'mongoose'
 import { ShiftModel } from './ShiftModel.js'
 
+
 //  employees schema with the validation rules for the fields
 // defining the structure of the model Employee
 const employeesSchema = new mongoose.Schema({
   name: { type: String, required: true },
   email: {
     // email with no whitespaces, lowercase and unique
-    type: String, trim: true, lowercase: true, unique: true,
+    type:  String,
+    trim: true,
+    lowercase: true,
+    sparse: true,
+    default: null, 
     validate: {
       // validator function tests the email for the correct formatting  
         validator: function(v) {
@@ -57,6 +62,13 @@ employeesSchema.pre("deleteOne", { document: false, query: true }, async functio
   // deleting all shift documents matching the employee
   await ShiftModel.deleteMany({ employee: { $in: employeesArray } })
   // calling the next middleware in the chain
+  next()
+})
+
+employeesSchema.pre('save', function (next) {
+  if (this.email === "") {
+      this.email = null
+  }
   next()
 })
 

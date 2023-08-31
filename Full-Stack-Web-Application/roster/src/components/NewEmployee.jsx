@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 
+// setting the state of employee object properties
 const NewEmployee = ({ addEmployee }) => {
   const [name, setName] = useState('')
   const [email, setEmail] = useState('')
@@ -8,7 +9,7 @@ const NewEmployee = ({ addEmployee }) => {
   const [wage, setWage] = useState('')
   const [contract, setContract] = useState('')
 
-
+  // function that handles submit event
   const submit = (e) => {
 
     e.preventDefault()
@@ -21,12 +22,13 @@ const NewEmployee = ({ addEmployee }) => {
       wage,
       contract
     }
-
+  // if dob has a value, set dob property to newEmployee
     if (dob) {
       newEmployee.dob = dob
     }
-    
+    // adding new employee to the database
     addEmployee(newEmployee)
+
     // Reset form fields
     setName('')
     setEmail('')
@@ -36,8 +38,10 @@ const NewEmployee = ({ addEmployee }) => {
     setContract('')
 }
 
+// formatting dob as it is being entered
 const handleDOBInputChange = (value) => {
   if (value.length === 2 || value.length === 5) {
+    // adding '-' after 2 or 5 characters
     setDob(value + '-')
   } else {
     setDob(value)

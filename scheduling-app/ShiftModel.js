@@ -32,9 +32,7 @@ const shiftsSchema = new mongoose.Schema({
   }},
   endTime: { type: String, required: true },
   end: {type: String, required: true },
-
   pause: { type: Number, required: true },
-  
 })
 
 const ShiftModel = mongoose.model('Shift', shiftsSchema)

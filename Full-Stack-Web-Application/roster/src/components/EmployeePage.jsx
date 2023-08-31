@@ -4,7 +4,9 @@ import UpdateEmployee from './UpdateEmployee'
 import ViewEmployee from './ViewEmployee'
 
 function EmployeePage({ employees, shifts, updateEmployee, handleDelete }) {
+  // extracting id from the parameters
   const { id } = useParams()
+  // matching the id to the id from employees in the array
   const selectedEmployee = employees.find(emp => emp._id === id)
   
   return selectedEmployee 
