@@ -21,9 +21,9 @@ const shiftsArray = await ShiftModel.insertMany(shifts)
 console.log('Inserted shifts')
 
 const employees = [
-  {name: "John", email:"john@gmail.com", phone: "2113143234", dob: "13-10-1980", wage: 2000.0, contract: "Part-time", shifts: [shiftsArray[0], shiftsArray[1]]},
-  {name: "Michael", email:"michael@gmail.com", phone: "85469304", dob: "23-08-1995", wage: 1500.0,contract: "Casual", shifts: [shiftsArray[2], shiftsArray[3]]},
-  {name: "Carlie", email:"carlie@gmail.com", phone: "7569315", dob: "01-05-1975", wage: 4000.0, contract: "Full-time", shifts: [shiftsArray[4], shiftsArray[5]]}
+  {name: "John", email:"john@gmail.com", phone: "2113143234", dob: "13-10-1980", wage: 26.0, contract: "Part-time", shifts: [shiftsArray[0], shiftsArray[1]]},
+  {name: "Michael", email:"michael@gmail.com", phone: "85469304", dob: "23-08-1995", wage: 30.0,contract: "Casual", shifts: [shiftsArray[2], shiftsArray[3]]},
+  {name: "Carlie", email:"carlie@gmail.com", phone: "7569315", dob: "01-05-1975", wage: 33.0, contract: "Full-time", shifts: [shiftsArray[4], shiftsArray[5]]}
 ]
 
 //  deleting the documents from the Employee collection 
@@ -33,11 +33,12 @@ console.log('Deleted employees')
 const employeesArray = await EmployeeModel.insertMany(employees)
 console.log('Inserted employees')
 
+// looping through each shift document of employee object
+// and updating it by storing the employee id in each shift
 for(let i = 0; i < employeesArray.length; i++) {
   const employeeShifts = employeesArray[i].shifts
   for(let shiftId of employeeShifts) {
    let name = await ShiftModel.findByIdAndUpdate(shiftId, { employee: employeesArray[i]._id })
-   console.log(name)
   }
 }
 

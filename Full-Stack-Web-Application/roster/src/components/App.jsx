@@ -13,14 +13,17 @@ import NewShift from './NewShift'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
-
+// initiating the app 
 const App = () => {
+  // navigating to routes with a useNavigate hook
   const navigate = useNavigate()
 
   // Employee Functions
-  // Define useState for Employees here to allow access from Employees & NewEmployee Component
+
+  // useState to track the state and update the state of the employee object
   const [employees, setEmployees] = useState([])
 
+  // 
   useEffect(() => {
     (async () => {
       const res = await fetch("http://localhost:4001/employees")
@@ -29,9 +32,9 @@ const App = () => {
     })()
   }, [])
 
-  // Allow Routes to Access ID variables from Employees
+  // allowing routes to access employee id 
   function ShowEmployeeWrapper() {
-    const { id } = useParams();
+    const { id } = useParams()
     
     // Find the employee whose _id matches the id from the URL parameters
     const selectedEmployee = employees.find(emp => emp._id === id);

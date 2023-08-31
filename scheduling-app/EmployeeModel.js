@@ -53,11 +53,13 @@ const employeesSchema = new mongoose.Schema({
   }
 })
 
-// schema "pre" method to cascade delete
+// schema "pre" method to indicate that middleware will execute before the deleteOne method
 employeesSchema.pre("deleteOne", { document: false, query: true }, async function(next) {
+  // fetching the documents matching the criteria
   const docs = await this.model.find(this.getFilter())
-  const users = docs.map((item) => item._id)
-  await ShiftModel.deleteMany({ employee: { $in: users } })
+  // mapping through employees 
+  const employeesArray = docs.map((employee) => employee._id)
+  await ShiftModel.deleteMany({ employee: { $in: employeesArray } })
   next()
 })
 

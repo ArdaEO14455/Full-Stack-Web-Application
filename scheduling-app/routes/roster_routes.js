@@ -7,29 +7,6 @@ import isValid from 'date-fns';
 // creating a new router object
 const router = Router()
 
-// function to validate the incoming date
-function validateDate(req, res, next) {
-  // extracting start_date and end_date from the parameters
-  const { start_date, end_date } = req.params
-  
-  if (!start_date || !end_date) {
-      return res.status(400).send("Start date and end date are required.")
-  }
-  
-  const startDateTime = DateTime.fromFormat(start_date, 'DD-MM-YYYY')
-  const endDateTime = DateTime.fromFormat(end_date, 'DD-MM-YYYY')
-
-  if (!startDateTime.isValid || !endDateTime.isValid) {
-      return res.status(400).send("Invalid date format. Use DD-MM-YYYY format.")
-  }
-
-  req.params.start_date = startDateTime.toFormat('DD-MM-YYYY')
-  req.params.end_date = endDateTime.toFormat('DD-MM-YYYY')
-  
-  next()
-}
-
-
 router.get('/', async (req, res) => {
   try {
     // Since no date range is specified, we simply find all shifts
@@ -46,29 +23,22 @@ router.get('/', async (req, res) => {
 });
 
 
-// getting shifts from the specified date range
-router.get('/:start_date/:end_date', validateDate, async (req, res) => {
-  // extracting start and end dates from query parameters
-  const { start_date, end_date } = req.params
+//Get specified shift
+router.get('/:id', async (req, res) => {
   try {
-    // storing the date objects in the "shifts" variable
-      const shifts = await ShiftModel.find({
-        // retrieving all the documents that are in the specified range
-          date: {
-            // greater than or equal to start date
-              $gte: start_date,
-              // less than or equal to end date
-              $lte: end_date
-          }
-          // populating shift collection with the employee documents(with only name and email data)
-       }).populate('employee', 'name email')
-      //  send the shift details back to the client
-      res.send(shifts)
+    const shifts = await ShiftModel.findById(req.params.id)
+      // Populate the 'employee' field with only 'name' and 'email'
+      .populate('employee', 'name email');
+      
+
+    // Send the shift details back to the client
+    res.send(shifts);
   } catch (err) {
-    // in case of an error, send an error message back
-      res.status(500).send({ error: err.message })
+    // In case of an error, send an error message back
+    res.status(500).send({ error: err.message });
   }
-})
+});
+
 
 // creating a new shift 
 router.post('/', async (req, res) => {
