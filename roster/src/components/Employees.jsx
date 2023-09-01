@@ -17,11 +17,11 @@ const Employees = ({ employees }) => {
   <thead>
     <tr>
       <th className="text-center"scope="col">Name</th>
-      <th className="d-none d-sm-table-cell" scope="col">Email</th>
-      <th className="d-none d-sm-table-cell" scope="col">Phone</th>
-      <th className="d-none d-sm-table-cell" scope="col">DOB</th>
-      <th className="d-none d-sm-table-cell" scope="col">Wage</th>
-      <th className="d-none d-sm-table-cell" scope="col">Contract</th>
+      <th className="text-center d-none d-sm-table-cell" scope="col">Email</th>
+      <th className="text-center d-none d-sm-table-cell" scope="col">Phone</th>
+      <th className="text-center d-none d-md-table-cell" scope="col">DOB</th>
+      <th className="text-center d-none d-md-table-cell" scope="col">Wage</th>
+      <th className="text-center d-none d-md-table-cell" scope="col">Contract</th>
     </tr>
   </thead>
 
@@ -30,11 +30,11 @@ const Employees = ({ employees }) => {
   {employees.map((employee) => (
     <tr key={employee._id}>
       <td className="text-center"><Link to={`/employee/${employee._id}`}>{employee.name}</Link></td>
-      <td className="d-none d-sm-table-cell">{employee.email}</td>
-      <td className="d-none d-sm-table-cell">{employee.phone}</td>
-      <td className="d-none d-sm-table-cell">{employee.dob}</td>
-      <td className="d-none d-sm-table-cell">${employee.wage}/hr</td>
-      <td className="d-none d-sm-table-cell">{employee.contract}</td>
+      <td className="text-center d-none d-sm-table-cell">{employee.email}</td>
+      <td className="text-center d-none d-sm-table-cell">{employee.phone}</td>
+      <td className="text-center d-none d-md-table-cell">{employee.dob}</td>
+      <td className="text-center d-none d-md-table-cell">${employee.wage}/hr</td>
+      <td className="text-center d-none d-md-table-cell">{employee.contract}</td>
     </tr>
   ))}
 </tbody>

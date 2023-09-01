@@ -15,7 +15,7 @@ import 'react-toastify/dist/ReactToastify.css'
 // initiating the app 
 const App = () => {
   // navigating to routes with a useNavigate hook
-  const navigate = useNavigate()
+  const nav = useNavigate()
   const reload = () => {window.location.reload()}
 
   // Employee Functions
@@ -45,7 +45,7 @@ const App = () => {
         if (response.ok) {
           setEmployees((prevEmployees) => [...prevEmployees, responseBody])
           toast.success("Employee was created!")
-          navigate('/employees')
+          nav('/employees')
       } else { 
             console.error('Error adding employee. Status:', response.status, 'Response:', responseBody)
         }
@@ -74,7 +74,7 @@ const App = () => {
         return prevEmployees.map(emp => emp._id === employeeId ? data : emp)
       })
         toast.success("Employee information was updated!")
-        navigate('/employees')
+        nav('/employees')
     } catch (error) {
       console.error("Error:", error.message)
     }
@@ -96,7 +96,7 @@ const App = () => {
         // displaying a message that employee was deleted with the toast library 
         toast.success("Employee was deleted!")
         // navigating to the employees page after the deletion
-        navigate('/employees')
+        nav('/employees')
       } else {
         console.error("Error:", response.statusText)
       }       
@@ -137,10 +137,11 @@ const App = () => {
         headers: { "Content-Type": "application/json" }
       })
       
-      setShifts([...shifts, await returnedShift.json()])
-      nav("/roster/")
-      reload()
       toast.success("Shift was created!")
+      nav("/roster")
+      setShifts([...shifts, await returnedShift.json()])
+      // reload()
+      
     
     }
   // Shift Update
@@ -151,15 +152,17 @@ const App = () => {
         headers: { "Content-Type": "application/json" }
       })
       
+      
         const updatedShiftData = await response.json();
         setShifts((prevShifts) =>
           prevShifts.map((shift) =>
             shift._id == updatedShiftData._id ? updatedShiftData : shift
           )
         )
+        toast.success("Shift Was Updated!")
         nav("/roster/")
         reload()
-        toast.success("Shift Was Updated!")
+        
       }
 // Shift Delete
   const deleteShift = async (shift) => {
@@ -170,9 +173,10 @@ const App = () => {
           method: 'DELETE',
         });
         setShifts([shifts])
+        toast.success("Shift Deleted")
         nav("/roster/")
         reload()
-        toast.success("Shift Deleted")
+        
       } catch (error) {
         console.error('Error deleting shift:', error)
       }

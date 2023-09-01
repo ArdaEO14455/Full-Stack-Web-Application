@@ -37,6 +37,14 @@ const NewShift = ({ addShift, employees }) => {
       pause,
     };
     addShift(newShift)
+
+setEmployee('')
+setStartDate('')
+setStartTime('')
+setEndDate('')
+setEndTime('')
+setPause('')
+
   };
 
   return (

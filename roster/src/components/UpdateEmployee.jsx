@@ -48,8 +48,9 @@ const handleDOBInputChange = (value) => {
 }
   return employee ? ( 
   <>
+  <div className="h-100 bg-primary bg-opacity-50">
     <h1 className="row justify-content-center"
-      >{employee.name} Details</h1>
+      >{employee.name}'s Details</h1>
       <form className="container" 
       onSubmit={submit}
       >
@@ -124,6 +125,7 @@ const handleDOBInputChange = (value) => {
         <button type="submit" style = {{ color: 'black'}} className="btn btn-primary mt-3 container-lg">Update Employee Details</button>
         <button  type="button" onClick={ onDeleteClick } style = {{ backgroundColor: 'red', color: 'black'}} className="btn btn-primary mt-3 container-lg">Delete Employee</button>
       </form>
+      </div>
     </>) : (
     <h4>Employee not Found!</h4>
   )
