@@ -1,17 +1,16 @@
 import React, { useState, useEffect, useMemo, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { Calendar} from 'react-big-calendar';
+import { Calendar, momentLocalizer} from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import moment from 'moment';
-import { momentLocalizer } from 'react-big-calendar';
+import {  } from 'react-big-calendar';
 import { add } from 'date-fns';
 import MediaQuery from 'react-responsive';
 
 
-
 const localizer = momentLocalizer(moment);
 
-const Roster = ({ shifts }) => {
+const Roster = ({ shifts, employees }) => {
   const [currentView, setCurrentView] = useState('week'); // Default view is month
   const [projectedWageExpense, setProjectedWageExpense] = useState(0); // Initialize with 0
 
@@ -31,7 +30,7 @@ const Roster = ({ shifts }) => {
   
     // Simulate clicking the 'month' view
     setCurrentView('week');
-  }, [shifts, shifts.employee]); //trigger handleRangeChange with the placeholder dates once a change in shifts is observed
+  }, [shifts.employee]); //trigger handleRangeChange with the placeholder dates once a change in shifts is observed
   const handleRangeChange = (range, view) => {
     setCurrentView(view); // Update the current view using useState so that react re-renders the page after view change
     calculateProjectedWageExpense(range, view); // Call the function to calculate projected wage expense
@@ -99,20 +98,23 @@ const Roster = ({ shifts }) => {
   };
   
 
-    
-      const events = shifts.map((shift) => {//iterate over all shifts and map them onto 'events'
-      const start = moment(shift.start).toDate(); // Parse start time
-      const end = moment(shift.end).toDate();     // Parse end time
-      const employeeName = shift.employee ? shift.employee.name : 'Loading...'
-    
+  
 
-      
-
+  const events = shifts.map((shift) => {
+    const start = moment(shift.start).toDate();
+    const end = moment(shift.end).toDate();
+    const employeeId = shift.employee._id ?
+     shift.employee._id // when reloaded, shifts will have their ID stored as their _id
+     : shift.employee; //newly created shifts will have their ID stored under shift.employee
+    
+    const employee = employees.find((emp) => emp._id === employeeId); //match each shift's employee ID to the id of the employee in the employees array
+    const employeeName = employee ? employee.name : 'Loading...'; //set employeeName as the name.
 
 
 
       return {
         //return each shift as an event in the calendar
+        id: shift._id, 
         title: (
           <Link to={`/roster/${shift._id}`} className='text-black'>
             {employeeName}<br />
@@ -122,7 +124,7 @@ const Roster = ({ shifts }) => {
         ),
         start: start, //define the start of the event by the start of the shift
         end: end, //define the end of the event by the end of the shift
-        key: shift._id, //pass in the id of the shift as the unique event id
+       //pass in the id of the shift as the unique event id
       
       } 
       
@@ -130,12 +132,11 @@ const Roster = ({ shifts }) => {
   });
 
   const views = ['week', 'day']
-   
-
+  
   // Calendar Object
 
   return (
-    <div className='z-1'>
+    <div className='vh-100'>
       <section className="row bg-primary bg-opacity-50 align-items-center">
         <h1 className="row h1 fw-bold p-3 text-primary justify-content-center border-bottom border-4 border-primary">Roster</h1>
 
@@ -153,40 +154,39 @@ const Roster = ({ shifts }) => {
 
 
  {/* Calendar View for */}
-      <MediaQuery minWidth={1000}>
-       
-      <Calendar
-        
-        localizer={localizer} //define localizer
-        events={events} //calendar events defined by the objects within 'events'
-        startAccessor="start"
-        endAccessor="end"
-        style={{ height: 800 }}
-        defaultView='month'
-        onView={(view) => setCurrentView(view)} //on view change set view to the new view
-        onRangeChange={handleRangeChange} // on view change trigger the expense calculation
-        onNavigate={handleRangeChange}//when user navigates with 'back' or 'next', trigger the expense calculation
-        onShowMore={(events, date) => this.setState({ showModal: true, events })}
-        popup= {true}
-      />
-      </MediaQuery>
+ <MediaQuery minWidth={1000}>
+  <Calendar
+    localizer={localizer}
+    events={events}
+    startAccessor="start"
+    endAccessor="end"
+    defaultView="month"
+    onView={(view) => setCurrentView(view)}
+    onRangeChange={handleRangeChange}
+    onNavigate={handleRangeChange}
+    popup={true} // Enable popup for overflow events
+    popupOffset={0} // Adjust the offset as needed
+    maxEventSlots= {2}
+  />
 
-      <MediaQuery maxWidth={1000}>
-      <Calendar
-        views={views}
-        localizer={localizer} //define localizer
-        events={events} //calendar events defined by the objects within 'events'
-        startAccessor="start"
-        endAccessor="end"
-        defaultView='week'
-        style={{ height: 800 }}
-        onView={(view) => setCurrentView(view)} //on view change set view to the new view
-        onRangeChange={handleRangeChange} // on view change trigger the expense calculation
-        onNavigate={handleRangeChange}
-        onShowMore={(events, date) => this.setState({ showModal: true, events })}
-        popup= {true}
-      />
-      </MediaQuery>
+  </MediaQuery>
+<MediaQuery maxWidth={1000}>
+  <Calendar
+    views={views}
+    localizer={localizer}
+    events={events}
+    startAccessor="start"
+    endAccessor="end"
+    defaultView="week"
+    onView={(view) => setCurrentView(view)}
+    onRangeChange={handleRangeChange}
+    onNavigate={handleRangeChange}
+    popup={true} // Enable popup for overflow events
+    popupOffset={0} // Adjust the offset as needed
+    eventOverlap="constrict" // Adjust the overlap behavior as needed
+    maxEventSlots= {2}
+  />
+</MediaQuery>
 
 
 

@@ -9,7 +9,6 @@ const router = Router()
 // get request to the employees page will return the list of employees 
 router.get('/', async (req, res) =>{ 
 
-console.log(res.body)
 res.send(await EmployeeModel.find().select('-shifts'))
 
 })

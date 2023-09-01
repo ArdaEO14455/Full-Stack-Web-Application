@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react'
 import { Routes, Route, useParams, useNavigate } from 'react-router-dom'
 import UpdateShift from './UpdateShift'
-import ViewEmployee from './ViewEmployee'
 import NavBar from './NavBar'
 import Employees from './Employees'
 import Roster from './Roster'
 import NewEmployee from './NewEmployee'
-import UpdateEmployee from './UpdateEmployee'
 import EmployeePage from './EmployeePage'
 import NewShift from './NewShift'
 import { ToastContainer, toast } from 'react-toastify'
@@ -16,7 +14,6 @@ import 'react-toastify/dist/ReactToastify.css'
 const App = () => {
   // navigating to routes with a useNavigate hook
   const nav = useNavigate()
-  const reload = () => {window.location.reload()}
 
   // Employee Functions
   // useState to track the state and update the state of the employee object
@@ -129,18 +126,18 @@ const App = () => {
 
   //Shift Creation
   async function addShift( { employee, startDate, startTime, start, endDate, endTime, end, pause }) {
-    // const id = shifts.length
+    
     // Add a new entry
+    const newShift = { employee, startDate, startTime, start, endDate, endTime, end, pause };
       const returnedShift= await fetch('http://localhost:4001/roster/new', {
         method: 'POST',
-        body: JSON.stringify({ employee, startDate, startTime, start, endDate, endTime, end, pause }),
+        body: JSON.stringify(newShift),
         headers: { "Content-Type": "application/json" }
       })
       
       toast.success("Shift was created!")
       nav("/roster")
       setShifts([...shifts, await returnedShift.json()])
-      // reload()
       
     
     }
@@ -161,7 +158,6 @@ const App = () => {
         )
         toast.success("Shift Was Updated!")
         nav("/roster/")
-        reload()
         
       }
 // Shift Delete
@@ -175,7 +171,6 @@ const App = () => {
         setShifts([shifts])
         toast.success("Shift Deleted")
         nav("/roster/")
-        reload()
         
       } catch (error) {
         console.error('Error deleting shift:', error)
@@ -194,11 +189,9 @@ const App = () => {
         <Route path='/employees' element={<Employees employees={employees}  />} />
           <Route path='/employees/new' element={<NewEmployee addEmployee={addEmployee} />}/>
           <Route path='/employee/:id' element={<EmployeePage employees={employees} shifts={shifts} updateEmployee={updateEmployee} handleDelete={handleDelete} />} />
-
-        {/* <Route path='/employee/:id' element={<ShowEmployeeWrapper employees={employees} updateEmployee={updateEmployee} handleDelete = {handleDelete}/>} /> */}
         
         {/* Roster & Shift Paths */}
-        <Route path='/roster' element={<Roster shifts={shifts} />} />
+        <Route path='/roster' element={<Roster shifts={shifts} employees={employees} />} />
         <Route path='/roster/new' element={<NewShift addShift={addShift} employees={employees}/>} />
         <Route path='/roster/:id' element={<ShowShiftWrapper /> } />
 
