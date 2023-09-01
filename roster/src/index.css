@@ -36,6 +36,10 @@ h1 {
   line-height: 1.1;
 }
 
+.header {
+  background-color: #213547;
+}
+
 button {
   border-radius: 8px;
   border: 1px solid transparent;
@@ -67,3 +71,5 @@ button:focus-visible {
     background-color: #f9f9f9;
   }
 }
+
+

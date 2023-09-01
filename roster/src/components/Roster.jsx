@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Calendar, dateFnsLocalizer } from 'react-big-calendar';
-import format from 'date-fns/format';
+import { Calendar, } from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
-import enUS from 'date-fns/locale/en-US'
-import parse from 'date-fns/parse'
 import moment from 'moment';
 import { momentLocalizer } from 'react-big-calendar';
 import { add } from 'date-fns';
@@ -79,8 +76,6 @@ const Roster = ({ shifts }) => {
           }
           break;
     }
-    // console.log(startDateRange)
-    // console.log(endDateRange)
   
     const newProjectedWageExpense = shifts
       .filter((shift) => { //filter shifts that are found between the defined range start and end
@@ -88,7 +83,7 @@ const Roster = ({ shifts }) => {
         return shiftStartDate.isBetween(startDateRange, endDateRange, null, '[]');
       })
       .map((shift) => {
-        const wage = 10; // replace with employee.wage
+        const wage = shift.employee.wage
         //make the start and end times each a moment object
         const startTime = moment(shift.start);
         const endTime = moment(shift.end);
@@ -114,27 +109,34 @@ const Roster = ({ shifts }) => {
           <Link to={`/roster/${shift._id}`} className='text-black'>
             {employeeName}<br />
             Shift: {shift.startTime} - {shift.endTime} <br />
-            Break: {shift.pause}
+            Break: {shift.pause} Minutes
           </Link>
         ),
         start: start, //define the start of the event by the start of the shift
         end: end, //define the end of the event by the end of the shift
         key: shift._id, //pass in the id of the shift as the unique event id
         
-      }
+      } 
       
-      
+  
   });
 
 
   // Calendar Object
 
   return (
-    <div className='z-0'>
-      <section>
-        <h2 align='center'>Roster</h2>
-        <Link to='/roster/new'>Add New Shift</Link>
-        <h2 align='center'>Projected Wage Expense: ${projectedWageExpense} </h2>
+    <div className='z-1'>
+      <section className="row bg-primary bg-opacity-50 align-items-center">
+        <h1 className="row h1 fw-bold p-3 text-primary justify-content-center border-bottom border-4 border-primary">Roster</h1>
+
+
+
+        <h2 className="col text-center text-primary fw-bold m-3">Projected Wage Expense: ${projectedWageExpense} </h2>
+
+          <Link className="text-center text-primary fw-bold align-middle" to='/roster/new'>
+            <i class="bi-plus-circle-fill fs-1 ">Add Shift</i>  
+          </Link>
+
       </section>
       <Calendar
         localizer={localizer} //define localizer
