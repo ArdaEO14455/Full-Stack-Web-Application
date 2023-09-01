@@ -6,7 +6,7 @@ const ViewEmployee = ({ employee, shifts }) => {
   const employeeShifts = shifts.filter(shift => shift.employee._id === employee._id);
   const navigate = useNavigate()
   const goToEditShift = (shiftId) => {
-    navigate(`/roster/${shiftId}`)
+    navigate(`/${shiftId}`)
   }
   return (
     <div className="p-3 vh-100 bg-primary bg-opacity-50">

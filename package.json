@@ -3,5 +3,12 @@
     "bootstrap-icons": "^1.10.5",
     "moment": "^2.29.4",
     "react-big-calendar": "^1.8.2"
+  },
+  "devDependencies": {
+    "@testing-library/jest-dom": "^6.1.2",
+    "@testing-library/react": "^14.0.0",
+    "@testing-library/user-event": "^14.4.3",
+    "jest": "^29.6.4",
+    "vitest": "^0.34.3"
   }
 }

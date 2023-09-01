@@ -7,11 +7,7 @@ import { format, parseISO } from 'date-fns'
 const router = Router()
 
 // get request to the employees page will return the list of employees 
-router.get('/', async (req, res) =>{ 
-
-res.send(await EmployeeModel.find().select('-shifts'))
-
-})
+router.get('/', async (req, res) => res.send(await EmployeeModel.find().select('-shifts')))
 
 // get request to get an employee by id
 router.get('/:id', async (req, res) => {

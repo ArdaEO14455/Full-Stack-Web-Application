@@ -5,7 +5,7 @@ import NavBar from './NavBar'
 import Employees from './Employees'
 import Roster from './Roster'
 import NewEmployee from './NewEmployee'
-import EmployeePage from './EmployeePage'
+import EmployeePage from './EmployeeShifts'
 import NewShift from './NewShift'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
@@ -109,7 +109,7 @@ const App = () => {
 
   useEffect(() => {
     (async () => {
-      const res = await fetch("http://localhost:4001/roster")
+      const res = await fetch("http://localhost:4001/")
       const data = await res.json()
       setShifts(data)
     })()
@@ -129,21 +129,21 @@ const App = () => {
     
     // Add a new entry
     const newShift = { employee, startDate, startTime, start, endDate, endTime, end, pause };
-      const returnedShift= await fetch('http://localhost:4001/roster/new', {
+      const returnedShift= await fetch('http://localhost:4001/new', {
         method: 'POST',
         body: JSON.stringify(newShift),
         headers: { "Content-Type": "application/json" }
       })
       
       toast.success("Shift was created!")
-      nav("/roster")
+      nav("/")
       setShifts([...shifts, await returnedShift.json()])
       
     
     }
   // Shift Update
   async function updateShift(updatedShift) {
-    const response = await fetch(`http://localhost:4001/roster/${updatedShift._id}`, {
+    const response = await fetch(`http://localhost:4001/${updatedShift._id}`, {
         method: 'PUT',
         body: JSON.stringify(updatedShift),
         headers: { "Content-Type": "application/json" }
@@ -157,20 +157,22 @@ const App = () => {
           )
         )
         toast.success("Shift Was Updated!")
-        nav("/roster/")
+        nav("/")
         
       }
 // Shift Delete
   const deleteShift = async (shift) => {
-    console.log(shift)
     if (window.confirm('Are you sure you want to delete this shift?')) {
       try {
-        await fetch(`http://localhost:4001/roster/${shift._id}`, {
+        await fetch(`http://localhost:4001/${shift._id}`, {
           method: 'DELETE',
         });
-        setShifts([shifts])
+
+        const updatedShifts = shifts.filter((s) => s._id !== shift._id);
+        setShifts(updatedShifts);
+
         toast.success("Shift Deleted")
-        nav("/roster/")
+        nav("/")
         
       } catch (error) {
         console.error('Error deleting shift:', error)
@@ -188,12 +190,12 @@ const App = () => {
         {/* Employees Routes */}
         <Route path='/employees' element={<Employees employees={employees}  />} />
           <Route path='/employees/new' element={<NewEmployee addEmployee={addEmployee} />}/>
-          <Route path='/employee/:id' element={<EmployeePage employees={employees} shifts={shifts} updateEmployee={updateEmployee} handleDelete={handleDelete} />} />
+          <Route path='/employees/:id' element={<EmployeePage employees={employees} shifts={shifts} updateEmployee={updateEmployee} handleDelete={handleDelete} />} />
         
         {/* Roster & Shift Paths */}
-        <Route path='/roster' element={<Roster shifts={shifts} employees={employees} />} />
-        <Route path='/roster/new' element={<NewShift addShift={addShift} employees={employees}/>} />
-        <Route path='/roster/:id' element={<ShowShiftWrapper /> } />
+        <Route path='/' element={<Roster shifts={shifts} employees={employees} />} />
+        <Route path='/new' element={<NewShift addShift={addShift} employees={employees}/>} />
+        <Route path='/:id' element={<ShowShiftWrapper /> } />
 
         {/* Catch-all for invalid URLs */}
         <Route path='*' element= {<h3>Page Not Found</h3>} /> 

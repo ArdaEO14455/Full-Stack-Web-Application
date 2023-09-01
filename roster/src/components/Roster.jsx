@@ -1,11 +1,11 @@
-import React, { useState, useEffect, useMemo, useCallback } from 'react';
+import React, { useState, useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, momentLocalizer} from 'react-big-calendar';
 import 'react-big-calendar/lib/css/react-big-calendar.css';
 import moment from 'moment';
-import {  } from 'react-big-calendar';
 import { add } from 'date-fns';
 import MediaQuery from 'react-responsive';
+import './calendar.css'
 
 
 const localizer = momentLocalizer(moment);
@@ -30,7 +30,7 @@ const Roster = ({ shifts, employees }) => {
   
     // Simulate clicking the 'month' view
     setCurrentView('week');
-  }, [shifts.employee]); //trigger handleRangeChange with the placeholder dates once a change in shifts is observed
+  }, [shifts]); //trigger handleRangeChange with the placeholder dates once a change in shifts is observed
   const handleRangeChange = (range, view) => {
     setCurrentView(view); // Update the current view using useState so that react re-renders the page after view change
     calculateProjectedWageExpense(range, view); // Call the function to calculate projected wage expense
@@ -110,13 +110,13 @@ const Roster = ({ shifts, employees }) => {
     const employee = employees.find((emp) => emp._id === employeeId); //match each shift's employee ID to the id of the employee in the employees array
     const employeeName = employee ? employee.name : 'Loading...'; //set employeeName as the name.
 
-
-
+  
+    
       return {
         //return each shift as an event in the calendar
         id: shift._id, 
         title: (
-          <Link to={`/roster/${shift._id}`} className='text-black'>
+          <Link to={`/${shift._id}`} className='text-black'>
             {employeeName}<br />
             Shift: {shift.startTime} - {shift.endTime} <br />
             Break: {shift.pause} Minutes
@@ -144,7 +144,7 @@ const Roster = ({ shifts, employees }) => {
 
         <h2 className="col text-center text-primary fw-bold m-3">Projected Wage Expense: ${projectedWageExpense} </h2>
 
-          <Link className="text-center text-primary fw-bold align-middle" to='/roster/new'>
+          <Link className="text-center text-primary fw-bold align-middle" to='/new'>
             <i class="bi-plus-circle-fill fs-1 ">Add Shift</i>  
           </Link>
 
@@ -164,8 +164,8 @@ const Roster = ({ shifts, employees }) => {
     onView={(view) => setCurrentView(view)}
     onRangeChange={handleRangeChange}
     onNavigate={handleRangeChange}
-    popup={true} // Enable popup for overflow events
-    popupOffset={0} // Adjust the offset as needed
+    popup // Enable popup for overflow events
+    popupOffset={5} // Adjust the offset as needed
     maxEventSlots= {2}
   />
 

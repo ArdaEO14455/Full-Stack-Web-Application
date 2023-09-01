@@ -3,6 +3,7 @@ import request from 'supertest'
 
 describe('Employee routes', () => {
   let res
+  let employeeId
 
   beforeAll(async () =>{
     const res = await request(app).post('/employees').send({
@@ -10,6 +11,7 @@ describe('Employee routes', () => {
       wage: 25,
       contract: 'Full-time'
     })
+    employeeId = res.body._id
   })
   
     beforeEach(async () => {
@@ -42,7 +44,6 @@ describe('Employee routes', () => {
     })
 
     it('Employee object can be updated', async () => {
-      const employeeId = '64f10ef572fb2030642ac31b'
       const res = await request(app)
         .put(`/employees/${employeeId}`)
         .send({
@@ -55,7 +56,6 @@ describe('Employee routes', () => {
     })
 
     it('Employee can be deleted', async () => {
-      const employeeId = '64f10ef572fb2030642ac31b'
       const res = await request(app).delete(
         `/employees/${employeeId}`
       )

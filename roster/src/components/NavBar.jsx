@@ -12,7 +12,7 @@ const NavBar = () => {
     </button> */}
 
     {/* <div className="navbar justify-content-center d-flex row" id="navbarNavAltMarkup"> */}
-    <Link className="col btn btn-outline-info d-lg-flex justify-content-lg-center col border-end border-info" to="/roster">
+    <Link className="col btn btn-outline-info d-lg-flex justify-content-lg-center col border-end border-info" to="/">
       <div className="nav-link text-center text-dark btn btn-outline-info">
             Roster
       </div>

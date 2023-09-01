@@ -29,7 +29,7 @@ const Employees = ({ employees }) => {
   <tbody>
   {employees.map((employee) => (
     <tr key={employee._id}>
-      <td className="text-center"><Link to={`/employee/${employee._id}`}>{employee.name}</Link></td>
+      <td className="text-center"><Link to={`/employees/${employee._id}`}>{employee.name}</Link></td>
       <td className="text-center d-none d-sm-table-cell">{employee.email}</td>
       <td className="text-center d-none d-sm-table-cell">{employee.phone}</td>
       <td className="text-center d-none d-md-table-cell">{employee.dob}</td>
