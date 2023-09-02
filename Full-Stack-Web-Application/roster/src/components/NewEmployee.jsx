@@ -49,56 +49,57 @@ const handleDOBInputChange = (value) => {
 }
   return (
     <>
+    <div className="vh-100 bg-primary bg-opacity-50">
     {/* Header */}
-    <h1 className="row justify-content-center">New Employee Details</h1>
+    <h2 className="row justify-content-center p-4">New Employee Details</h2>
         <form className="container" onSubmit={submit}>
 
 
     {/* Name Field */}
-    <label htmlFor="nameInput" className="form-label">Name</label>
+    <label htmlFor="nameInput" className="h4 row justify-content-center mt-1 form-label text-decoration-underline fw-bold">Name</label>
     <input id="nameInput" value={name} onChange={e => setName(e.target.value)} 
-      className="form-control form-control-lg" 
+      className="form-control form-control-sm bg-primary-subtle text-center"  
       type="text" 
       placeholder="John Doe" 
       required />
 
     {/* Email Field */}
-    <label htmlFor="emailInput" className="form-label">Email address</label>
+    <label htmlFor="emailInput" className="h4 row justify-content-center mt-1 form-label text-decoration-underline fw-bold">Email address</label>
     <input id="emailInput" value={email} onChange={e => setEmail(e.target.value)} 
-      className="form-control" 
+      className="form-control form-control-sm bg-primary-subtle text-center" 
       type="email" 
       placeholder="E.g.abc123@gmail.com" />
 
     {/* Phone Field */}
-    <label htmlFor="phoneInput" className="form-label">Phone Number</label>
+    <label htmlFor="phoneInput" className="h4 row justify-content-center mt-1 form-label text-decoration-underline fw-bold">Phone Number</label>
     <input id="phoneInput" value={phone} onChange={e => setPhone(e.target.value)} 
-      className="form-control form-control-sm" 
+      className="form-control form-control-sm bg-primary-subtle text-center"  
       type="tel" 
       placeholder="E.g. +61412123456" />
 
     {/* DOB Field */}
-    <label htmlFor="dobInput" className="form-label">Date of Birth</label>
+    <label htmlFor="dobInput" className="h4 row justify-content-center mt-1 form-label text-decoration-underline fw-bold">Date of Birth</label>
     <input id="dobInput" value={dob} onChange={e => handleDOBInputChange(e.target.value)}
-      className="form-control form-control-sm" 
+      className="form-control form-control-sm bg-primary-subtle text-center"  
       type="text" 
       placeholder="E.g. 01-01-2000" />
 
     {/* Wage Field */}
-    <label htmlFor="wageInput" className="form-label">Hourly Wage ($/Hr)</label>
+    <label htmlFor="wageInput" className="h4 row justify-content-center mt-1 form-label text-decoration-underline fw-bold">Hourly Wage ($/Hr)</label>
     <input id="wageInput" value={wage} onChange={e => setWage(e.target.value)} 
-      className="form-control form-control-sm"
+      className="form-control form-control-sm bg-primary-subtle text-center" 
       type="number"
       placeholder="E.g. 30"
       min = "0"
       required />
 
     {/* Contract Field */}
-    <label htmlFor="contractInput" className="form-label">Contract</label>
+    <label htmlFor="contractInput" className="h4 row justify-content-center mt-1 form-label text-decoration-underline fw-bold">Contract</label>
     <select
       id="contractInput"
       value={contract}
       onChange={e => setContract(e.target.value)}
-      className="form-control form-control-sm"
+      className="form-control form-control-sm bg-primary-subtle text-center" 
       required
       >
       <option value="" disabled>Select a contract type</option>
@@ -111,6 +112,7 @@ const handleDOBInputChange = (value) => {
     <button type="submit" className="btn btn-primary mt-3 container-lg">Add Employee</button>
 
     </form>
+    </div>
   </>
   )
 }

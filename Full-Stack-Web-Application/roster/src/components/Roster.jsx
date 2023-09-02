@@ -1,10 +1,7 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { Calendar, dateFnsLocalizer } from 'react-big-calendar'
-import format from 'date-fns/format'
+import { Calendar, } from 'react-big-calendar'
 import 'react-big-calendar/lib/css/react-big-calendar.css'
-import enUS from 'date-fns/locale/en-US'
-import parse from 'date-fns/parse'
 import moment from 'moment'
 import { momentLocalizer } from 'react-big-calendar'
 import { add } from 'date-fns'
@@ -15,110 +12,144 @@ const Roster = ({ shifts }) => {
   const [currentView, setCurrentView] = useState('month') // Default view is month
   const [projectedWageExpense, setProjectedWageExpense] = useState(0) // Initialize with 0
 
+//Trigger expense projection calculation after shifts have loaded
+  useEffect(() => {
+    // pass through the placeholder range for the initialized component
+    const currentDate = new Date()
+    const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1)
+    const endOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0)
+  
+    const dummyRange = {
+      start: startOfMonth,
+      end: endOfMonth,
+    };
+  
+    handleRangeChange(dummyRange, 'month')
+  
+    // Simulate clicking the 'month' view
+    setCurrentView('month')
+  }, [shifts]); //trigger handleRangeChange with the placeholder dates once a change in shifts is observed
   const handleRangeChange = (range, view) => {
-    setCurrentView(view); // Update the current view
+    setCurrentView(view) // Update the current view using useState so that react re-renders the page after view change
     calculateProjectedWageExpense(range, view) // Call the function to calculate projected wage expense
   };
   
-  const calculateProjectedWageExpense = (range, view) => {
-    let startDateRange;
-    let endDateRange;
-    // console.log(range)
-    // console.log(range.start)
-    // console.log(moment(range.start))
-    // console.log(moment(range.start).startOf('month'))
+  
 
+  //start projected wage expense calculation by defining the range in which the shifts are included
+  const calculateProjectedWageExpense = (range, view) => {
+    let startDateRange
+    let endDateRange
+
+    
+  
     // Calculate appropriate startDateRange and endDateRange based on the current view
-    switch (view) {
-      case 'month':
-        // console.log(range.start)
-        // console.log(range)
-        // console.log(range.end)
+    switch (view) { //for reasons unbeknownst to me, each view has a differently formatted range 
+      case 'month': //this returns its range as an object with a 'start' property and an 'end' property, each a date object
         startDateRange = moment(range.start).startOf('month')._i
         endDateRange = moment(range.end).endOf('month')._i
         break
-      case 'week':
-        // console.log(range)
+
+      case 'week': //This returns its range as an array of 7 date objects instead of an object with just a 'start' and 'end' like the 'month' view
         startDateRange = moment(range.start).startOf('week')._d
         endDateRange = moment(range.end).endOf('week')._d
         break
-      case 'day':
-        // console.log(range)
+
+        
+      case 'day': //similar to the 'week' view, this also returns an array, but containing just one date object for that day
         startDateRange = moment(range[0])._i
-        endDateRange = moment(add(new Date(range), { days: 1 }))._i
-        // console.log(startDateRange)
-        // console.log(endDateRange)
+        endDateRange = moment(add(new Date(range[0]), { days: 1 }))._i
         break
-      default:
-        // Handle other views if needed
-        startDateRange = moment(range.start)
-        endDateRange = moment(range.end)
-        break
+
+        default: //This case is applied when navigating using 'next' or 'previous'. Since each view returns a 'range' of different type (month -> object, week -> array of 7 dates, day -> array of 1 date), we need to apply different rule-sets based on the range type
+          if (Array.isArray(range)) {
+            if (range.length === 1) { //applied when the range is that of a day view
+              startDateRange = moment(range[0]).startOf('day').toDate() //call the first date object in the array
+              endDateRange = moment(startDateRange).add(1, 'day').toDate() //manually add 24h to the start of the only date object to get the endDateRange
+            } else {  //applied when the range is that of a week view
+              startDateRange = moment(range[0]).startOf(view).toDate() //call the first date object in the array
+              endDateRange = moment(range[range.length - 1]).endOf(view).toDate() //call the last date object in the arrray
+            }
+          } else { //applied when the range is that of a month
+            startDateRange = range.start
+            endDateRange = range.end
+          }
+          break
     }
-    // console.log(startDateRange)
-    // console.log(endDateRange)
-    
+  
     const newProjectedWageExpense = shifts
-      .filter((shift) => {
+      .filter((shift) => { //filter shifts that are found between the defined range start and end
         const shiftStartDate = moment(shift.start)
         return shiftStartDate.isBetween(startDateRange, endDateRange, null, '[]')
       })
       .map((shift) => {
-        const wage = 10; // Default wage if no employee
+        const wage = shift.employee.wage
+        //make the start and end times each a moment object
         const startTime = moment(shift.start)
         const endTime = moment(shift.end)
         const durationHours = endTime.diff(startTime, 'hours')
-        return wage * durationHours;
+        return wage * durationHours
       })
       .reduce((totalWage, shiftWage) => totalWage + shiftWage, 0)
   
-    setProjectedWageExpense(newProjectedWageExpense); // Update the projected wage expense state
+    setProjectedWageExpense(newProjectedWageExpense) // Update the projected wage expense state
   }
   
 
-    const events = shifts.map((shift) => {
-    const start = moment(shift.start).toDate() // Parse start time
-    const end = moment(shift.end).toDate()     // Parse end time
-    const employeeName = shift.employee ? shift.employee.name : 'Loading...'
-    // const employeeName = shift.employee.name
-
-
-  return {
-
-    title: (
-      <Link to={`/roster/${shift._id}`} className='text-black'>
-        {employeeName}<br />
-        Shift: {shift.startTime} - {shift.endTime} <br />
-        Break: {shift.pause}
-      </Link>
-    ),
-    start: start,
-    end: end,
-    key: shift._id,
     
-  }
-    
-})
+      const events = shifts.map((shift) => {//iterate over all shifts and map them onto 'events'
+      const start = moment(shift.start).toDate() // Parse start time
+      const end = moment(shift.end).toDate()    // Parse end time
+      const employeeName = shift.employee ? shift.employee.name : 'Loading...'
+      // const employeeName = shift.employee.name
+
+      return {
+        //return each shift as an event in the calendar
+        title: (
+          <Link to={`/roster/${shift._id}`} className='text-black'>
+            {employeeName}<br />
+            Shift: {shift.startTime} - {shift.endTime} <br />
+            Break: {shift.pause} Minutes
+          </Link>
+        ),
+        start: start, //define the start of the event by the start of the shift
+        end: end, //define the end of the event by the end of the shift
+        key: shift._id, //pass in the id of the shift as the unique event id
+        
+      } 
+      
+  
+  });
+
+
+  // Calendar Object
 
   return (
-    <div className='z-0'>
-      <section>
-        <h2 align='center'>Roster</h2>
-        <Link to='/roster/new'>Add New Shift</Link>
-        <h2 align='center'>Projected Wage Expense: ${projectedWageExpense} </h2>
+    <div className='z-1'>
+      <section className="row bg-primary bg-opacity-50 align-items-center">
+        <h1 className="row h1 fw-bold p-3 text-primary justify-content-center border-bottom border-4 border-primary">Roster</h1>
+
+
+
+        <h2 className="col text-center text-primary fw-bold m-3">Projected Wage Expense: ${projectedWageExpense} </h2>
+
+          <Link className="text-center text-primary fw-bold align-middle" to='/roster/new'>
+            <i class="bi-plus-circle-fill fs-1 ">Add Shift</i>  
+          </Link>
+
       </section>
       <Calendar
-        localizer={localizer}
-        events={events}
+        localizer={localizer} //define localizer
+        events={events} //calendar events defined by the objects within 'events'
         startAccessor="start"
         endAccessor="end"
         style={{ height: 800 }}
-        onView={(view) => setCurrentView(view)}
-        onRangeChange={handleRangeChange}
-        onNavigate={handleRangeChange}
+        onView={(view) => setCurrentView(view)} //on view change set view to the new view
+        onRangeChange={handleRangeChange} // on view change trigger the expense calculation
+        onNavigate={handleRangeChange} //when user navigates with 'back' or 'next', trigger the expense calculation 
       />
     </div>
-  )
-}
+  );
+};
 
 export default Roster;

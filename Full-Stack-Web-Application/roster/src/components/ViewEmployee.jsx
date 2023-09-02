@@ -4,10 +4,10 @@ import { useNavigate } from 'react-router-dom'
 
 
 const ViewEmployee = ({ employee, shifts }) => {
-  const employeeShifts = shifts.filter(shift => shift.employee._id === employee._id);
+  const employeeShifts = shifts.filter(shift => shift.employee._id === employee._id)
   const navigate = useNavigate()
   const goToEditShift = (shiftId) => {
-    navigate(`/roster/${shiftId}`)
+    navigate(`/${shiftId}`)
   }
   return (
     <div>
@@ -31,6 +31,6 @@ const ViewEmployee = ({ employee, shifts }) => {
   )
 }
 
-export default ViewEmployee;
+export default ViewEmployee
 
 

@@ -1,14 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { Routes, Route, useParams, useNavigate } from 'react-router-dom'
-import Overview from './Overview'
 import UpdateShift from './UpdateShift'
-import ViewEmployee from './ViewEmployee'
 import NavBar from './NavBar'
 import Employees from './Employees'
 import Roster from './Roster'
 import NewEmployee from './NewEmployee'
-import UpdateEmployee from './UpdateEmployee'
-import EmployeePage from './EmployeePage'
+import EmployeeShifts from './EmployeeShifts.jsx'
 import NewShift from './NewShift'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
@@ -132,20 +129,21 @@ const App = () => {
   async function addShift( { employee, startDate, startTime, start, endDate, endTime, end, pause }) {
     // const id = shifts.length
     // Add a new entry
-      const returnedShift= await fetch('http://localhost:4001/roster/new', {
+      const returnedShift= await fetch('http://localhost:4001/new', {
         method: 'POST',
         body: JSON.stringify({ employee, startDate, startTime, start, endDate, endTime, end, pause }),
         headers: { "Content-Type": "application/json" }
       })
       
       setShifts([...shifts, await returnedShift.json()])
-      nav("/roster/")
+      nav("/")
       reload()
+      toast.success("Shift was created!")
     
     }
   // Shift Update
   async function updateShift(updatedShift) {
-    const response = await fetch(`http://localhost:4001/roster/${updatedShift._id}`, {
+    const response = await fetch(`http://localhost:4001/${updatedShift._id}`, {
         method: 'PUT',
         body: JSON.stringify(updatedShift),
         headers: { "Content-Type": "application/json" }
@@ -157,20 +155,22 @@ const App = () => {
             shift._id == updatedShiftData._id ? updatedShiftData : shift
           )
         )
-        nav("/roster/")
+        nav("/")
         reload()
+        toast.success("Shift Was Updated!")
       }
 // Shift Delete
   const deleteShift = async (shift) => {
     console.log(shift)
     if (window.confirm('Are you sure you want to delete this shift?')) {
       try {
-        await fetch(`http://localhost:4001/roster/${shift._id}`, {
+        await fetch(`http://localhost:4001/${shift._id}`, {
           method: 'DELETE',
         });
         setShifts([shifts])
-        nav("/roster/")
+        nav("/")
         reload()
+        toast.success("Shift Deleted")
       } catch (error) {
         console.error('Error deleting shift:', error)
       }
@@ -184,20 +184,15 @@ const App = () => {
       <NavBar />
       <Routes>
         
-        {/* Overview */}
-        <Route path='/' element={<Overview employees={employees} shifts={shifts} />} />
-        
         {/* Employees Routes */}
         <Route path='/employees' element={<Employees employees={employees}  />} />
           <Route path='/employees/new' element={<NewEmployee addEmployee={addEmployee} />}/>
-          <Route path='/employee/:id' element={<EmployeePage employees={employees} shifts={shifts} updateEmployee={updateEmployee} handleDelete={handleDelete} />} />
-
-        {/* <Route path='/employee/:id' element={<ShowEmployeeWrapper employees={employees} updateEmployee={updateEmployee} handleDelete = {handleDelete}/>} /> */}
+          <Route path='/employees/:id' element={<EmployeeShifts employees={employees} shifts={shifts} updateEmployee={updateEmployee} handleDelete={handleDelete} />} />
         
         {/* Roster & Shift Paths */}
-        <Route path='/roster' element={<Roster shifts={shifts} />} />
-        <Route path='/roster/new' element={<NewShift addShift={addShift} employees={employees}/>} />
-        <Route path='/roster/:id' element={<ShowShiftWrapper /> } />
+        <Route path='/' element={<Roster shifts={shifts} />} />
+        <Route path='/new' element={<NewShift addShift={addShift} employees={employees}/>} />
+        <Route path='/:id' element={<ShowShiftWrapper /> } />
 
         {/* Catch-all for invalid URLs */}
         <Route path='*' element= {<h3>Page Not Found</h3>} /> 

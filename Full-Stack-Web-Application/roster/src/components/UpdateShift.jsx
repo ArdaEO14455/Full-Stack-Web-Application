@@ -30,11 +30,12 @@ const UpdateShift = ({ shift, updateShift, employees, deleteShift }) => {
       end,
       pause,
     }
+    console.log(updatedShift)
     updateShift(updatedShift)
-  };
+  }
 
   const shiftDelete = (e) => {
-    e.preventDefault()
+    e.preventDefault();
     deleteShift(shift)
   }
 
@@ -50,7 +51,9 @@ const UpdateShift = ({ shift, updateShift, employees, deleteShift }) => {
       <h1 className="row justify-content-center">Edit Shift</h1>
       <form className="container" onSubmit={submit}>
         {/* Employee Field */}
-        <select className="d-block form-select" required value={employee._id} onChange={event => setEmployee(event.target.value) }>
+        <select className="d-block form-select" required value={employee._id} onChange={event => {
+    const selectedEmployee = employees.find(emp => emp._id === event.target.value)
+    setEmployee(selectedEmployee)}}>
         {
           employees.map((employee) => {
             return <option key={employee._id} value={employee._id}>{employee.name}</option>

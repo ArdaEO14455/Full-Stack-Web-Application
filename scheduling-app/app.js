@@ -16,6 +16,6 @@ app.use(express.json())
 // attaching all the employees routes to the application
 app.use('/employees', employeeRoutes)
 
-app.use('/roster', rosterRoutes)
+app.use('/', rosterRoutes)
 
 export default app

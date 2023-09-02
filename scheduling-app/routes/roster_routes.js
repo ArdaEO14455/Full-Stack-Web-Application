@@ -12,7 +12,7 @@ router.get('/', async (req, res) => {
     // Since no date range is specified, we simply find all shifts
     const shifts = await ShiftModel.find()
       // Populate the 'employee' field with only 'name' and 'email'
-      .populate('employee', 'name email')
+      .populate('employee', 'name email wage')
     // Send the shift details back to the client
     res.send(shifts)
   } catch (err) {
@@ -26,7 +26,7 @@ router.get('/:id', async (req, res) => {
   try {
     const shifts = await ShiftModel.findById(req.params.id)
       // Populate the 'employee' field with only 'name' and 'email'
-      .populate('employee', 'name email')
+      .populate('employee', 'name email wage')
     // Send the shift details back to the client
     res.send(shifts)
   } catch (err) {
@@ -55,10 +55,10 @@ router.put('/:id', async (req, res) => {
     // storing the request params (id) in the "shiftId" variable
     const shiftId = req.params.id
     // extracting the date, start, end, pause properties from the body of the request
-    const { date, start, end, pause } = req.body
+    const { date, start, startDate, end, endDate, pause } = req.body
     // finding the shift by the id and updating the values
     // and seeting new to true, so that when server responds, it responds with the updated object
-    const updatedShift = await ShiftModel.findByIdAndUpdate(shiftId, { date, start, end, pause}, { new: true })
+    const updatedShift = await ShiftModel.findByIdAndUpdate(shiftId, { date, start, startDate, end, endDate, pause }, { new: true })
     // if shift was not found, send the error message
     if (!updatedShift) {
         return res.status(404).send({ error: "Shift not found" })
