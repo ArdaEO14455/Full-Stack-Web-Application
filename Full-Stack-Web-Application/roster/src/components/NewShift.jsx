@@ -1,56 +1,63 @@
-import React, { useState } from 'react';
-import { parse, addDays } from 'date-fns';
+import React, { useState } from 'react'
+import moment from 'moment'
 
-const UpdateShift = ({ shift, updateShift, employees, deleteShift }) => {
-  const [employee, setEmployee] = useState(shift.employee);
-  const [startDate, setStartDate] = useState(shift.startDate);
-  const [startTime, setStartTime] = useState(shift.startTime);
-  const [endDate, setEndDate] = useState(shift.endDate);
-  const [endTime, setEndTime] = useState(shift.endTime);
-  const [pause, setPause] = useState(shift.pause);
+const NewShift = ({ addShift, employees }) => {
+
+
+  const [employee, setEmployee] = useState('')
+  const [startDate, setStartDate] = useState('')
+  const [startTime, setStartTime] = useState('')
+  const [endDate, setEndDate] = useState('')
+  const [endTime, setEndTime] = useState('')
+  const [pause, setPause] = useState('')
 
   const submit = (e) => {
-    e.preventDefault();
+    e.preventDefault()
 
-    const start = parse(`${startDate} ${startTime}`, 'yyyy-MM-dd HH:mm', new Date());
+    // // Combine date and time for start and end
+    const start = moment(`${startDate} ${startTime}`, 'YYYY-MM-DD HH:mm').toDate()
 
-    let end = parse(`${endDate} ${endTime}`, 'yyyy-MM-dd HH:mm', new Date());
-    if (end < start) {
-      end = addDays(end, 1);
-    }
-
-    const updatedShift = {
-      _id: shift._id,
+    // // If the end time is on the next day, add one day to the end date
+    const end = moment(`${endDate} ${endTime}`, 'YYYY-MM-DD HH:mm').toDate()
+   
+    const newShift = {
       employee,
+
+      // Start Details
       startDate,
       startTime,
       start,
+
+      // End Details
       endDate,
       endTime,
       end,
+
+      //Break
       pause,
     };
-    updateShift(updatedShift);
+    addShift(newShift)
+
+setEmployee('')
+setStartDate('')
+setStartTime('')
+setEndDate('')
+setEndTime('')
+setPause('')
+
   };
 
-  const shiftDelete = (e) => {
-    e.preventDefault();
-    deleteShift(shift)
-  }
-
-
-  return shift ? (
+  return (
     <>
-      <h5> Employee: {shift.employee.name}</h5>
-      <h5> Date: {shift.startDate}</h5>
-      <h4> Shift Start: {shift.startTime} </h4>
-      <h4> Shift End: {shift.endTime} </h4>
-      <h4> Break: {shift.pause} </h4>
-
-      <h1 className="row justify-content-center">Edit Shift</h1>
-      <form className="container" onSubmit={submit}>
+      <div className="vh-100 bg-primary bg-opacity-50">
+      <h1 className="row justify-content-center p-4"
+      >New Shift Details</h1>
+      <form className="container" onSubmit={submit}
+      >
         {/* Employee Field */}
-        <select className="d-block form-select" required value={employee._id} onChange={event => setEmployee(event.target.value) }>
+      
+      <select className="d-block form-select bg-primary-subtle text-center" aria-label="Default select example" required value={employee._id} onChange={event => setEmployee(event.target.value) }>
+      <option selected value='' >Select Employee</option>
         {
           employees.map((employee) => {
             return <option key={employee._id} value={employee._id}>{employee.name}</option>
@@ -59,81 +66,66 @@ const UpdateShift = ({ shift, updateShift, employees, deleteShift }) => {
         }
       </select>
 
+          
         {/* Shift Start */}
-        <label htmlFor="startTimeInput" className="form-label">
-          Shift Start
-        </label>
+        <label for="startTimeInput" className="h4 row justify-content-center mt-1 form-label text-decoration-underline fw-bold" >Shift Start</label>
         {/* Start Date */}
         <input
-          id="dateInput"
-          value={startDate}
-          onChange={(e) => setStartDate(e.target.value)}
-          className="form-control"
-          type="date"
-          required
-        />
+            id="dateInput"
+            value={startDate}
+            onChange={e => setStartDate(e.target.value)}
+            className="form-control bg-primary-subtle text-center"
+            type="date"
+            required
+          />
         {/* Start Time */}
         <input
           id="startTimeInput"
           value={startTime}
-          onChange={(e) => setStartTime(e.target.value)}
-          className="form-control form-control-sm"
+          onChange={e => setStartTime(e.target.value)}
+          className="mt-2 form-control form-control-sm bg-primary-subtle text-center"
           type="time"
           required
         />
-
-        {/* Shift End Fields */}
+        {/* Shift End Field */}
         {/* End Date */}
-        <label htmlFor="endTimeInput" className="form-label">
-          Shift End
-        </label>
+        <label for="endTimeInput" className="h4 row justify-content-center mt-1 form-label text-decoration-underline fw-bold">Shift End</label>
         <input
-          id="dateInput"
-          value={endDate}
-          onChange={(e) => setEndDate(e.target.value)}
-          className="form-control"
-          type="date"
-          required
+                  id="dateInput"
+                  value={endDate}
+                  onChange={e => setEndDate(e.target.value)}
+                  className="form-control bg-primary-subtle text-center"
+                  type="date"
+                  required
         />
         {/* End Time */}
         <input
           id="endTimeInput"
           value={endTime}
-          onChange={(e) => setEndTime(e.target.value)}
-          className="form-control form-control-sm"
+          onChange={e => setEndTime(e.target.value)}
+          className="mt-2 form-control form-control-sm bg-primary-subtle text-center"
           type="time"
           required
         />
 
         {/* Break Field */}
-        <label htmlFor="exampleFormControlInput1" className="form-label">
-          Break (mins)
-        </label>
-        <input
-          value={pause}
-          onChange={(e) => setPause(e.target.value)}
-          className="form-control form-control-sm"
-          type="number"
-          placeholder="E.g. 30"
-          min = "0"
-          aria-label=".form-control-sm example"
-        />
+        <label for="exampleFormControlInput1" className="h4 row justify-content-center form-label text-decoration-underline fw-bold">Break (mins)</label>
+          <input 
+          value={pause} 
+          onChange= {e => setPause(e.target.value)} 
+          className="form-control form-control-sm bg-primary-subtle text-center" 
+          type="number" 
+          placeholder="E.g. 30" 
+          aria-label=".form-control-sm example" 
+          />
 
         {/* Submit Button */}
-        <button type="submit" className="btn btn-primary mt-3 container-lg">
-          Update Shift
-        </button>
-        {/* Delete Button */}
-        <button onClick={shiftDelete} className="btn btn-danger mt-3 container-lg" align="center">
-          Delete Shift
-        </button> 
+        <button type="submit" className="btn btn-primary mt-3 container-lg">Add shift</button>
       </form>
       
-           
+    </div>
     </>
-  ) : (
-    <h4>Shift not found</h4>
   );
 };
 
-export default UpdateShift;
+export default NewShift;

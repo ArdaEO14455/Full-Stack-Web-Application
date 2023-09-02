@@ -55,10 +55,10 @@ router.put('/:id', async (req, res) => {
     // storing the request params (id) in the "shiftId" variable
     const shiftId = req.params.id
     // extracting the date, start, end, pause properties from the body of the request
-    const { date, start, startDate, end, endDate, pause } = req.body
+    const { employee, date, start, startDate, end, endDate, pause } = req.body
     // finding the shift by the id and updating the values
     // and seeting new to true, so that when server responds, it responds with the updated object
-    const updatedShift = await ShiftModel.findByIdAndUpdate(shiftId, { date, start, startDate, end, endDate, pause }, { new: true })
+    const updatedShift = await ShiftModel.findByIdAndUpdate(shiftId, { employee, date, start, startDate, end, endDate, pause }, { new: true })
     // if shift was not found, send the error message
     if (!updatedShift) {
         return res.status(404).send({ error: "Shift not found" })

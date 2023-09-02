@@ -4,18 +4,18 @@ import NewEmployee from '../components/NewEmployee.jsx'
 import '@testing-library/jest-dom'
 
 describe('NewEmployee Component', () => {
-  let mockAddEmployee
+  let createEmployee
   let wasCalled = false
 
   beforeEach(() => {
     wasCalled = false
-    mockAddEmployee = () => {
+    createEmployee = () => {
       wasCalled = true
     }
   })
 
   it('Submitting new employee details', () => {
-    const { getByPlaceholderText, getByText, container } = render(<NewEmployee addEmployee={mockAddEmployee} />)
+    const { getByPlaceholderText, getByText, container } = render(<NewEmployee addEmployee={createEmployee} />)
 
     fireEvent.change(getByPlaceholderText("John Doe"), { target: { value: 'John' } })
     fireEvent.change(getByPlaceholderText("E.g.abc123@gmail.com"), { target: { value: 'john@gmail.com' } })

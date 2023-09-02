@@ -6,12 +6,12 @@ import EmployeeShifts from '../components/EmployeeShifts.jsx'
 import '@testing-library/jest-dom'
 
 describe('EmployeeShifts Component', () => {
-  const mockEmployees = [{
+  const newEmployees = [{
     name: "John Doe",
     _id: "12345"
   }]
 
-  const mockShifts = [{
+  const newShifts = [{
     startDate: "01-01-2023",
     endDate: "01-01-2023",
     start: "09:00",
@@ -21,8 +21,8 @@ describe('EmployeeShifts Component', () => {
     employee: { _id: "12345" }
   }];
 
-  const mockUpdateEmployee = () => {};
-  const mockHandleDelete = () => {};
+  const updateEmployee = () => {};
+  const handleDelete = () => {};
 
   let container
 
@@ -30,10 +30,10 @@ describe('EmployeeShifts Component', () => {
     container = render(
       <MemoryRouter >
           <EmployeeShifts
-            employees={mockEmployees} 
-            shifts={mockShifts}
-            updateEmployee={mockUpdateEmployee}
-            handleDelete={mockHandleDelete}
+            employees={newEmployees} 
+            shifts={newShifts}
+            updateEmployee={updateEmployee}
+            handleDelete={handleDelete}
           />
       </MemoryRouter>
     ).container

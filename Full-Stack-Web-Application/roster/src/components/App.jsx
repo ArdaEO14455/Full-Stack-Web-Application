@@ -5,7 +5,7 @@ import NavBar from './NavBar'
 import Employees from './Employees'
 import Roster from './Roster'
 import NewEmployee from './NewEmployee'
-import EmployeeShifts from './EmployeeShifts.jsx'
+import EmployeeShifts from './EmployeeShifts'
 import NewShift from './NewShift'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
@@ -14,7 +14,6 @@ import 'react-toastify/dist/ReactToastify.css'
 const App = () => {
   // navigating to routes with a useNavigate hook
   const navigate = useNavigate()
-  const reload = () => {window.location.reload()}
 
   // Employee Functions
   // useState to track the state and update the state of the employee object
@@ -110,14 +109,14 @@ const App = () => {
 
   useEffect(() => {
     (async () => {
-      const res = await fetch("http://localhost:4001/roster")
+      const res = await fetch("http://localhost:4001/")
       const data = await res.json()
       setShifts(data)
     })()
   }, [])
 
 // Allow Routes to Access ID variables from Shifts
-  function ShowShiftWrapper() {
+function ShowShiftWrapper() {
   const { id } = useParams()
   const selectedShift = shifts.find(shift => shift._id == id)
   // console.log(selectedShift)
@@ -127,18 +126,19 @@ const App = () => {
 
   //Shift Creation
   async function addShift( { employee, startDate, startTime, start, endDate, endTime, end, pause }) {
-    // const id = shifts.length
+    
     // Add a new entry
+    const newShift = { employee, startDate, startTime, start, endDate, endTime, end, pause };
       const returnedShift= await fetch('http://localhost:4001/new', {
         method: 'POST',
-        body: JSON.stringify({ employee, startDate, startTime, start, endDate, endTime, end, pause }),
+        body: JSON.stringify(newShift),
         headers: { "Content-Type": "application/json" }
       })
       
-      setShifts([...shifts, await returnedShift.json()])
-      nav("/")
-      reload()
       toast.success("Shift was created!")
+      nav("/")
+      setShifts([...shifts, await returnedShift.json()])
+      
     
     }
   // Shift Update
@@ -149,15 +149,16 @@ const App = () => {
         headers: { "Content-Type": "application/json" }
       })
       
+      
         const updatedShiftData = await response.json();
         setShifts((prevShifts) =>
           prevShifts.map((shift) =>
             shift._id == updatedShiftData._id ? updatedShiftData : shift
           )
         )
-        nav("/")
-        reload()
         toast.success("Shift Was Updated!")
+        nav("/")
+        
       }
 // Shift Delete
   const deleteShift = async (shift) => {
@@ -168,9 +169,9 @@ const App = () => {
           method: 'DELETE',
         });
         setShifts([shifts])
-        nav("/")
-        reload()
         toast.success("Shift Deleted")
+        nav("/")
+        
       } catch (error) {
         console.error('Error deleting shift:', error)
       }
@@ -187,10 +188,10 @@ const App = () => {
         {/* Employees Routes */}
         <Route path='/employees' element={<Employees employees={employees}  />} />
           <Route path='/employees/new' element={<NewEmployee addEmployee={addEmployee} />}/>
-          <Route path='/employees/:id' element={<EmployeeShifts employees={employees} shifts={shifts} updateEmployee={updateEmployee} handleDelete={handleDelete} />} />
+          <Route path='/employee/:id' element={<EmployeeShifts employees={employees} shifts={shifts} updateEmployee={updateEmployee} handleDelete={handleDelete} />} />
         
         {/* Roster & Shift Paths */}
-        <Route path='/' element={<Roster shifts={shifts} />} />
+        <Route path='/' element={<Roster shifts={shifts} employees={employees} />} />
         <Route path='/new' element={<NewShift addShift={addShift} employees={employees}/>} />
         <Route path='/:id' element={<ShowShiftWrapper /> } />
 

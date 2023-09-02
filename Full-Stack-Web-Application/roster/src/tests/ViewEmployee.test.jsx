@@ -8,12 +8,12 @@ import '@testing-library/jest-dom'
 describe('ViewEmployee Component', () => {
   let container
   
-    const mockEmployee = {
+    const newEmployee = {
         name: "John Doe",
         _id: "12345"
     }
     
-    const mockShifts = [{
+    const newShifts = [{
         startDate: "01-01-2023",
         endDate: "01-01-2023",
         start: "09:00",
@@ -26,7 +26,7 @@ describe('ViewEmployee Component', () => {
   beforeEach(() => {
     container = render(
       <MemoryRouter>
-        <ViewEmployee employee={mockEmployee} shifts={mockShifts}/>
+        <ViewEmployee employee={newEmployee} shifts={newShifts}/>
       </MemoryRouter>
     ).container
   })
