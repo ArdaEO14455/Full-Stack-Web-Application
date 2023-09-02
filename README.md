@@ -1,4 +1,4 @@
-Deployed Website:
+Deployed Website: https://main--gentle-swan-d432ee.netlify.app/
 Github Repository: https://github.com/ArdaEO14455/Full-Stack-Web-Application
 
 -----------------------------------------------------------------
