@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 
+
 // setting the state of employee object properties
 const NewEmployee = ({ addEmployee }) => {
   const [name, setName] = useState('')

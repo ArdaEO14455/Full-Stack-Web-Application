@@ -3,11 +3,12 @@ import { render, screen, fireEvent } from '@testing-library/react'
 import { describe, expect } from 'vitest'
 import UpdateShift from '../components/UpdateShift.jsx'
 import { MemoryRouter } from 'react-router-dom'
+import userEvent from '@testing-library/user-event'
 import '@testing-library/jest-dom'
 
 describe('UpdateShift Component', () => {
 
-  let container
+  let container 
 
   const updateShift = () => {}
   const deleteShift = () => {}
@@ -28,7 +29,7 @@ describe('UpdateShift Component', () => {
   }
 
   beforeEach(() => {
-    container = render(
+    render(
       <MemoryRouter>
       <UpdateShift 
         shift={newShift} 
@@ -36,17 +37,26 @@ describe('UpdateShift Component', () => {
         employees={newEmployees} 
         deleteShift={deleteShift} 
       />
-      </MemoryRouter>).container
+      </MemoryRouter>)
     
   })
 
   test('Renders the employee name correctly', () => {
-    expect(screen.getByText(`Employee: ${newShift.employee.name}`)).toBeInTheDocument()
+    expect(screen.getByText(`${newShift.employee.name}`)).toBeInTheDocument()
+  })
+
+  test('Renders the labels correctly', () => {
+    expect(screen.getByText('Edit Shift')).toBeInTheDocument()
+    expect(screen.getByText('Shift Start')).toBeInTheDocument()
+    expect(screen.getByText('Shift End')).toBeInTheDocument()
+    expect(screen.getByText('Break (mins)')).toBeInTheDocument()
   })
 
   test('Renders the shift date correctly', () => {
-    expect(screen.getByText(`Date: ${newShift.startDate}`)).toBeInTheDocument()
-  })
+    const startTimeInput = screen.getByLabelText(/Shift Start/i)
+    expect(startTimeInput).toBeInTheDocument()
+    expect(startTimeInput.value).toBe('09:00')
+  })  
 
   test('"Update Shift" button exists and can be clicked', () => {
     const updateButton = screen.getByText('Update Shift')

@@ -35,7 +35,7 @@ const NewShift = ({ addShift, employees }) => {
 
       //Break
       pause,
-    };
+    }
     addShift(newShift)
 
 setEmployee('')
@@ -45,7 +45,7 @@ setEndDate('')
 setEndTime('')
 setPause('')
 
-  };
+  }
 
   return (
     <>
@@ -125,7 +125,7 @@ setPause('')
       
     </div>
     </>
-  );
-};
+  )
+}
 
-export default NewShift;
+export default NewShift

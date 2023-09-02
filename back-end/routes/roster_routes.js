@@ -24,7 +24,6 @@ router.get('/', async (req, res) => {
 //Get specified shift
 router.get('/:id', async (req, res) => {
   try {
-    
     const shifts = await ShiftModel.findById(req.params.id)
       // Populate the 'employee' field with only 'name' and 'email'
       .populate('employee', 'name email wage')
@@ -39,8 +38,6 @@ router.get('/:id', async (req, res) => {
 // creating a new shift 
 router.post('/new', async (req, res) => {
   try {
-    const employee= await EmployeeModel.findById(req.body.employee)
-    req.body.employee = employee;
     // storing new shift in the variable newShift
     const newShift = await ShiftModel.create(req.body)
     // responding with a new shift object

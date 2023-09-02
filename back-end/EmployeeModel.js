@@ -65,12 +65,6 @@ employeesSchema.pre("deleteOne", { document: false, query: true }, async functio
   next()
 })
 
-employeesSchema.pre('save', function (next) {
-  if (this.email === "") {
-      this.email = null
-  }
-  next()
-})
 
 // creating a model based on the employees schema
 const EmployeeModel = mongoose.model('Employee', employeesSchema)

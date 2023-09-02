@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
-import format from 'date-fns/fp/format'
-import parse from 'date-fns/parse'
 
+// passing employee, updateEmployee, id, handleDelete to the component
 const UpdateEmployee = ({ employee, updateEmployee, id, handleDelete} ) => {
 
+  // setting the state of each property to the original value
   const [name, setName] = useState(employee.name)
   const [email, setEmail] = useState(employee.email)
   const [phone, setPhone] = useState(employee.phone)
@@ -11,16 +11,17 @@ const UpdateEmployee = ({ employee, updateEmployee, id, handleDelete} ) => {
   const [wage, setWage] = useState(employee.wage)
   const [contract, setContract] = useState(employee.contract)
 
-
-
+// on submit
   const submit = (e) => {
     e.preventDefault()
+    // convert the outcoming data to the appropriate format for the backend
     const convertDateToBackendFormat = (dateStr) => {
-      const [day, month, year] = dateStr.split("-");
-      return `${year}-${month}-${day}`;
-    }    
+      const [day, month, year] = dateStr.split("-")
+      return `${year}-${month}-${day}`
+    }
+    // if the dob was specified, convert it, otherwise send null instead
     const formattedDOB = dob ? convertDateToBackendFormat(dob) : null
-
+    // setting the employee object with new data
     const updatedEmployee = {
       name,
       dob: formattedDOB,
@@ -33,12 +34,13 @@ const UpdateEmployee = ({ employee, updateEmployee, id, handleDelete} ) => {
   updateEmployee(id, updatedEmployee)
     
   }
-  
+  // when delete buttong is clicked
   const onDeleteClick = (e) => {
     e.preventDefault()
+    // use the handledelete function to remove the employee
     handleDelete(id)
     }
-  
+// formatting the date of birth string 
 const handleDOBInputChange = (value) => {
   if (value.length === 2 || value.length === 5) {
     setDob(value + '-')
@@ -46,11 +48,13 @@ const handleDOBInputChange = (value) => {
     setDob(value)
   }
 }
+// if employee exists
   return employee ? ( 
+  // return the form 
   <>
   <div className="h-100 bg-primary bg-opacity-50">
     <h1 className="p-3 row justify-content-center"
-      >{employee.name}'s Details</h1>
+      >{employee.name} Details</h1>
       <form className="container" 
       onSubmit={submit}
       >
@@ -67,9 +71,9 @@ const handleDOBInputChange = (value) => {
           />
           
         {/* Email */}
-      <label htmlFor="startTimeInput" className="h4 row justify-content-center mt-1 form-label text-decoration-underline fw-bold">Email</label>
+      <label htmlFor="emailInput" className="h4 row justify-content-center mt-1 form-label text-decoration-underline fw-bold">Email</label>
       <input
-        id="dateInput"
+        id="emailInput"
         value={email}
         onChange={e => setEmail(e.target.value)}
         className="form-control form-control-sm bg-primary-subtle text-center"
@@ -77,9 +81,9 @@ const handleDOBInputChange = (value) => {
           />
 
         {/* Phone */}
-      <label htmlFor="endTimeInput" className="h4 row justify-content-center mt-1 form-label text-decoration-underline fw-bold">Phone</label>
+      <label htmlFor="phoneInput" className="h4 row justify-content-center mt-1 form-label text-decoration-underline fw-bold">Phone</label>
       <input
-        id="dateInput"
+        id="phoneInput"
         value={phone}
         onChange={e => setPhone(e.target.value)}
         className="form-control form-control-sm bg-primary-subtle text-center"
@@ -87,9 +91,9 @@ const handleDOBInputChange = (value) => {
         />
 
         {/* Date of Birth */}
-      <label htmlFor="endTimeInput" className="h4 row justify-content-center mt-1 form-label text-decoration-underline fw-bold">Date of Birth</label>
+      <label htmlFor="dobInput" className="h4 row justify-content-center mt-1 form-label text-decoration-underline fw-bold">Date of Birth</label>
       <input
-          id="endTimeInput"
+          id="dobInput"
           value={dob}
           onChange={e => handleDOBInputChange(e.target.value)}
           className="form-control form-control-sm bg-primary-subtle text-center"

@@ -1,13 +1,14 @@
 import React from 'react'
 import { useParams } from 'react-router-dom'
 import UpdateEmployee from './UpdateEmployee'
-import ViewEmployee from './ViewEmployee'
+import EmployeeShifts from './EmployeeShifts'
 
-function EmployeePage({ employees, shifts, updateEmployee, handleDelete }) {
+function ViewEmployee({ employees, shifts, updateEmployee, handleDelete, employeeId }) {
   // extracting id from the parameters
   const { id } = useParams()
+  const effectiveId = employeeId || id;
   // matching the id to the id from employees in the array
-  const selectedEmployee = employees.find(emp => emp._id === id)
+  const selectedEmployee = employees.find(emp => emp._id === effectiveId)
   
   return selectedEmployee 
     ? (<>
@@ -22,7 +23,7 @@ function EmployeePage({ employees, shifts, updateEmployee, handleDelete }) {
           />
           </div>
           <div className="col-md-6">
-          <ViewEmployee employee={selectedEmployee} shifts={shifts} />
+          <EmployeeShifts employee={selectedEmployee} shifts={shifts} />
         </div>
       </div>
     </div>
@@ -30,4 +31,5 @@ function EmployeePage({ employees, shifts, updateEmployee, handleDelete }) {
     : <div>Loading...</div>
 }
 
-export default EmployeePage
+export default ViewEmployee
+

@@ -5,21 +5,22 @@ import NavBar from './NavBar'
 import Employees from './Employees'
 import Roster from './Roster'
 import NewEmployee from './NewEmployee'
-import EmployeeShifts from './EmployeeShifts'
+import ViewEmployee from './ViewEmployee'
 import NewShift from './NewShift'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
+
 // initiating the app 
 const App = () => {
   // navigating to routes with a useNavigate hook
-  const nav = useNavigate()
+  const navigate = useNavigate()
 
   // Employee Functions
   // useState to track the state and update the state of the employee object
   const [employees, setEmployees] = useState([])
 
-  // fetching the  employee data
+  // fetching the 
   useEffect(() => {
     (async () => {
       const res = await fetch("http://localhost:4001/employees")
@@ -40,11 +41,14 @@ const App = () => {
         })
         const responseBody = await response.json()
         if (response.ok) {
+          // adding new employee to the objects array
           setEmployees((prevEmployees) => [...prevEmployees, responseBody])
+          // displaying a success message to the user
           toast.success("Employee was created!")
-          nav('/employees')
+          // navigating to the employees page
+          navigate('/employees')
       } else { 
-            console.error('Error adding employee. Status:', response.status, 'Response:', responseBody)
+          console.error("Error:", response.statusText)
         }
     } catch(error) {
         console.error('Error:', error)
@@ -61,17 +65,19 @@ const App = () => {
         },
         body: JSON.stringify(updatedEmployee),
       })
-      const data = await response.json();
+      const data = await response.json()
       console.log(data)
       if (!response.ok) {
         throw new Error('Error updating data')
       } 
-      // Update local state with the returned data from the server
+      // update local state with the returned data from the server
       setEmployees(prevEmployees => {
         return prevEmployees.map(emp => emp._id === employeeId ? data : emp)
       })
+      // display a success message to the user
         toast.success("Employee information was updated!")
-        nav('/employees')
+        // redirect to the employees page
+        navigate('/employees')
     } catch (error) {
       console.error("Error:", error.message)
     }
@@ -93,7 +99,7 @@ const App = () => {
         // displaying a message that employee was deleted with the toast library 
         toast.success("Employee was deleted!")
         // navigating to the employees page after the deletion
-        nav('/employees')
+        navigate('/employees')
       } else {
         console.error("Error:", response.statusText)
       }       
@@ -102,11 +108,7 @@ const App = () => {
     }
   }
   
-
-// Shift Functions
-
-
-  // Define useState for Shifts here to allow access by all other components
+// Shift functions
   const [shifts, setShifts] = useState([]) //remove seedShifts after testing
 
   useEffect(() => {
@@ -130,33 +132,25 @@ function ShowShiftWrapper() {
   async function addShift( { employee, startDate, startTime, start, endDate, endTime, end, pause }) {
     
     // Add a new entry
-    try {
-    const newShift = { employee, startDate, startTime, start, endDate, endTime, end, pause };
+    const newShift = { employee, startDate, startTime, start, endDate, endTime, end, pause }
       const returnedShift= await fetch('http://localhost:4001/new', {
         method: 'POST',
         body: JSON.stringify(newShift),
         headers: { "Content-Type": "application/json" }
       })
-      console.log(returnedShift.json())
+      
       toast.success("Shift was created!")
-      nav("/")
-      setShifts([...shifts, await returnedShift.json()])
-    } catch(error) {
-        console.error('Error:', error)
-    }  
-    
-    }
+      navigate("/")
+      setShifts([...shifts, await returnedShift.json()])  
+  }
+
   // Shift Update
   async function updateShift(updatedShift) {
-  
-    try{
     const response = await fetch(`http://localhost:4001/${updatedShift._id}`, {
         method: 'PUT',
         body: JSON.stringify(updatedShift),
         headers: { "Content-Type": "application/json" }
-      })
-      
-      
+      })     
         const updatedShiftData = await response.json();
         setShifts((prevShifts) =>
           prevShifts.map((shift) =>
@@ -164,32 +158,25 @@ function ShowShiftWrapper() {
           )
         )
         toast.success("Shift Was Updated!")
-        nav("/")
-
-      } catch(error) {
-        console.error('Error:', error)
-    }  
-        
-      }
+        navigate("/")     
+  }
 // Shift Delete
   const deleteShift = async (shift) => {
+    console.log(shift)
     if (window.confirm('Are you sure you want to delete this shift?')) {
       try {
-        response = await fetch(`http://localhost:4001/${shift._id}`, {
+        await fetch(`http://localhost:4001/${shift._id}`, {
           method: 'DELETE',
         })
-        await response.json()
         setShifts([shifts])
         toast.success("Shift Deleted")
-        nav("/")
-        
+        navigate("/")     
       } catch (error) {
         console.error('Error deleting shift:', error)
       }
     }
   }
   
-
 // Routes
   return (
   <>
@@ -199,7 +186,7 @@ function ShowShiftWrapper() {
         {/* Employees Routes */}
         <Route path='/employees' element={<Employees employees={employees}  />} />
           <Route path='/employees/new' element={<NewEmployee addEmployee={addEmployee} />}/>
-          <Route path='/employee/:id' element={<EmployeeShifts employees={employees} shifts={shifts} updateEmployee={updateEmployee} handleDelete={handleDelete} />} />
+          <Route path='/employees/:id' element={<ViewEmployee employees={employees} shifts={shifts} updateEmployee={updateEmployee} handleDelete={handleDelete} />} />
         
         {/* Roster & Shift Paths */}
         <Route path='/' element={<Roster shifts={shifts} employees={employees} />} />

@@ -3,7 +3,7 @@ import moment from 'moment'
 import { useNavigate } from 'react-router-dom'
 
 
-const ViewEmployee = ({ employee, shifts }) => {
+const EmployeeShifts = ({ employee, shifts }) => {
   const employeeShifts = shifts.filter(shift => shift.employee._id === employee._id)
   const navigate = useNavigate()
   const goToEditShift = (shiftId) => {
@@ -30,6 +30,4 @@ const ViewEmployee = ({ employee, shifts }) => {
   )
 }
 
-export default ViewEmployee
-
-
+export default EmployeeShifts
