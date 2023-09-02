@@ -5,7 +5,7 @@ import NavBar from './NavBar'
 import Employees from './Employees'
 import Roster from './Roster'
 import NewEmployee from './NewEmployee'
-import EmployeePage from './EmployeeShifts'
+import EmployeeShifts from './EmployeeShifts'
 import NewShift from './NewShift'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
@@ -13,7 +13,7 @@ import 'react-toastify/dist/ReactToastify.css'
 // initiating the app 
 const App = () => {
   // navigating to routes with a useNavigate hook
-  const nav = useNavigate()
+  const navigate = useNavigate()
 
   // Employee Functions
   // useState to track the state and update the state of the employee object
@@ -42,7 +42,7 @@ const App = () => {
         if (response.ok) {
           setEmployees((prevEmployees) => [...prevEmployees, responseBody])
           toast.success("Employee was created!")
-          nav('/employees')
+          navigate('/employees')
       } else { 
             console.error('Error adding employee. Status:', response.status, 'Response:', responseBody)
         }
@@ -71,7 +71,7 @@ const App = () => {
         return prevEmployees.map(emp => emp._id === employeeId ? data : emp)
       })
         toast.success("Employee information was updated!")
-        nav('/employees')
+        navigate('/employees')
     } catch (error) {
       console.error("Error:", error.message)
     }
@@ -93,7 +93,7 @@ const App = () => {
         // displaying a message that employee was deleted with the toast library 
         toast.success("Employee was deleted!")
         // navigating to the employees page after the deletion
-        nav('/employees')
+        navigate('/employees')
       } else {
         console.error("Error:", response.statusText)
       }       
@@ -116,7 +116,7 @@ const App = () => {
   }, [])
 
 // Allow Routes to Access ID variables from Shifts
-  function ShowShiftWrapper() {
+function ShowShiftWrapper() {
   const { id } = useParams()
   const selectedShift = shifts.find(shift => shift._id == id)
   // console.log(selectedShift)
@@ -162,15 +162,13 @@ const App = () => {
       }
 // Shift Delete
   const deleteShift = async (shift) => {
+    console.log(shift)
     if (window.confirm('Are you sure you want to delete this shift?')) {
       try {
         await fetch(`http://localhost:4001/${shift._id}`, {
           method: 'DELETE',
         });
-
-        const updatedShifts = shifts.filter((s) => s._id !== shift._id);
-        setShifts(updatedShifts);
-
+        setShifts([shifts])
         toast.success("Shift Deleted")
         nav("/")
         
@@ -190,7 +188,7 @@ const App = () => {
         {/* Employees Routes */}
         <Route path='/employees' element={<Employees employees={employees}  />} />
           <Route path='/employees/new' element={<NewEmployee addEmployee={addEmployee} />}/>
-          <Route path='/employees/:id' element={<EmployeePage employees={employees} shifts={shifts} updateEmployee={updateEmployee} handleDelete={handleDelete} />} />
+          <Route path='/employee/:id' element={<EmployeeShifts employees={employees} shifts={shifts} updateEmployee={updateEmployee} handleDelete={handleDelete} />} />
         
         {/* Roster & Shift Paths */}
         <Route path='/' element={<Roster shifts={shifts} employees={employees} />} />

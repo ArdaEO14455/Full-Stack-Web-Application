@@ -1,6 +1,4 @@
 import React, { useState } from 'react'
-import format from 'date-fns/fp/format'
-import parse from 'date-fns/parse'
 
 const UpdateEmployee = ({ employee, updateEmployee, id, handleDelete} ) => {
 
@@ -16,8 +14,8 @@ const UpdateEmployee = ({ employee, updateEmployee, id, handleDelete} ) => {
   const submit = (e) => {
     e.preventDefault()
     const convertDateToBackendFormat = (dateStr) => {
-      const [day, month, year] = dateStr.split("-");
-      return `${year}-${month}-${day}`;
+      const [day, month, year] = dateStr.split("-")
+      return `${year}-${month}-${day}`
     }    
     const formattedDOB = dob ? convertDateToBackendFormat(dob) : null
 
@@ -48,9 +46,8 @@ const handleDOBInputChange = (value) => {
 }
   return employee ? ( 
   <>
-  <div className="h-100 bg-primary bg-opacity-50">
     <h1 className="row justify-content-center"
-      >{employee.name}'s Details</h1>
+      >{employee.name} Details</h1>
       <form className="container" 
       onSubmit={submit}
       >
@@ -67,9 +64,9 @@ const handleDOBInputChange = (value) => {
           />
           
         {/* Email */}
-      <label htmlFor="startTimeInput" className="form-label">Email</label>
+      <label htmlFor="emailInput" className="form-label">Email</label>
       <input
-        id="dateInput"
+        id="emailInput"
         value={email}
         onChange={e => setEmail(e.target.value)}
         className="form-control"
@@ -77,9 +74,9 @@ const handleDOBInputChange = (value) => {
           />
 
         {/* Phone */}
-      <label htmlFor="endTimeInput" className="form-label">Phone</label>
+      <label htmlFor="phoneInput" className="form-label">Phone</label>
       <input
-        id="dateInput"
+        id="phoneInput"
         value={phone}
         onChange={e => setPhone(e.target.value)}
         className="form-control"
@@ -87,9 +84,9 @@ const handleDOBInputChange = (value) => {
         />
 
         {/* Date of Birth */}
-      <label htmlFor="endTimeInput" className="form-label">Date of Birth</label>
+      <label htmlFor="dobInput" className="form-label">Date of Birth</label>
       <input
-          id="endTimeInput"
+          id="dobInput"
           value={dob}
           onChange={e => handleDOBInputChange(e.target.value)}
           className="form-control form-control-sm"
@@ -125,7 +122,6 @@ const handleDOBInputChange = (value) => {
         <button type="submit" style = {{ color: 'black'}} className="btn btn-primary mt-3 container-lg">Update Employee Details</button>
         <button  type="button" onClick={ onDeleteClick } style = {{ backgroundColor: 'red', color: 'black'}} className="btn btn-primary mt-3 container-lg">Delete Employee</button>
       </form>
-      </div>
     </>) : (
     <h4>Employee not Found!</h4>
   )

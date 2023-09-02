@@ -4,6 +4,8 @@ import NewShift from '../components/NewShift'
 import '@testing-library/jest-dom'
 import { MemoryRouter } from 'react-router-dom'
 import { vi } from 'vitest'
+import { expect } from 'vitest'
+
 
 describe('NewShift component', () => {
 

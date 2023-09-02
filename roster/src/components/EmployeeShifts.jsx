@@ -3,7 +3,7 @@ import { useParams } from 'react-router-dom'
 import UpdateEmployee from './UpdateEmployee'
 import ViewEmployee from './ViewEmployee'
 
-function EmployeePage({ employees, shifts, updateEmployee, handleDelete }) {
+function EmployeeShifts({ employees, shifts, updateEmployee, handleDelete }) {
   // extracting id from the parameters
   const { id } = useParams()
   // matching the id to the id from employees in the array
@@ -30,4 +30,5 @@ function EmployeePage({ employees, shifts, updateEmployee, handleDelete }) {
     : <div>Loading...</div>
 }
 
-export default EmployeePage
+export default EmployeeShifts
+
