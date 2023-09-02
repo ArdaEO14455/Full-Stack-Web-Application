@@ -1,7 +1,7 @@
 import React, { useState, useEffect} from 'react';
 import { Link } from 'react-router-dom';
 import { Calendar, momentLocalizer} from 'react-big-calendar';
-import 'react-big-calendar/lib/css/react-big-calendar.css';
+// import 'react-big-calendar/lib/css/react-big-calendar.css';
 import moment from 'moment';
 import { add } from 'date-fns';
 import MediaQuery from 'react-responsive';
@@ -29,7 +29,7 @@ const Roster = ({ shifts, employees }) => {
     handleRangeChange(dummyRange, 'week'); 
   
     // Simulate clicking the 'month' view
-    setCurrentView('week');
+    setCurrentView('month');
   }, [shifts]); //trigger handleRangeChange with the placeholder dates once a change in shifts is observed
   const handleRangeChange = (range, view) => {
     setCurrentView(view); // Update the current view using useState so that react re-renders the page after view change
@@ -85,15 +85,19 @@ const Roster = ({ shifts, employees }) => {
         return shiftStartDate.isBetween(startDateRange, endDateRange, null, '[]');
       })
       .map((shift) => {
+    
         const wage = shift.employee.wage
         //make the start and end times each a moment object
         const startTime = moment(shift.start);
         const endTime = moment(shift.end);
+      
+        
         const durationHours = endTime.diff(startTime, 'hours');
+        console.log(wage)
         return wage * durationHours;
       })
       .reduce((totalWage, shiftWage) => totalWage + shiftWage, 0);
-  
+    console.log(newProjectedWageExpense)
     setProjectedWageExpense(newProjectedWageExpense); // Update the projected wage expense state
   };
   
@@ -122,6 +126,8 @@ const Roster = ({ shifts, employees }) => {
             Break: {shift.pause} Minutes
           </Link>
         ),
+        content: <p>Shift: {shift.startTime} - {shift.endTime} <br />
+        Break: {shift.pause} Minutes</p>,
         start: start, //define the start of the event by the start of the shift
         end: end, //define the end of the event by the end of the shift
        //pass in the id of the shift as the unique event id
@@ -139,21 +145,23 @@ const Roster = ({ shifts, employees }) => {
     <div className='vh-100'>
       <section className="row bg-primary bg-opacity-50 align-items-center">
         <h1 className="row h1 fw-bold p-3 text-primary justify-content-center border-bottom border-4 border-primary">Roster</h1>
-
-
-
         <h2 className="col text-center text-primary fw-bold m-3">Projected Wage Expense: ${projectedWageExpense} </h2>
-
-          <Link className="text-center text-primary fw-bold align-middle" to='/new'>
+          <Link className="text-center text-primary fw-bold align-middle btn btn-outline-info" to='/new'>
             <i class="bi-plus-circle-fill fs-1 ">Add Shift</i>  
           </Link>
+      </section>
 
+      <section className="row bg-primary bg-opacity-50 align-items-center">
+        <h1 className="row h1 fw-bold p-3 text-primary justify-content-center border-bottom border-4 border-primary">Roster</h1>
+        <h2 data-testid="expense" className="col text-center text-primary fw-bold m-3">Projected Wage Expense: ${projectedWageExpense} </h2>
+          <Link className="text-center text-primary fw-bold align-middle" to='/new'>
+            <i data-testid="add" className="bi-plus-circle-fill fs-1 ">Add Shift</i>  
+          </Link>
       </section>
 
 
 
-
- {/* Calendar View for */}
+ {/* Calendar View for Desktop */}
  <MediaQuery minWidth={1000}>
   <Calendar
     localizer={localizer}
@@ -166,11 +174,37 @@ const Roster = ({ shifts, employees }) => {
     onNavigate={handleRangeChange}
     popup // Enable popup for overflow events
     popupOffset={5} // Adjust the offset as needed
-    maxEventSlots= {2}
+    eventOverlap="constrict" // Adjust the overlap behavior as needed
+    
   />
 
   </MediaQuery>
-<MediaQuery maxWidth={1000}>
+
+
+ {/* Calendar View for Mobile */}
+<MediaQuery maxWidth={700} >
+  <Calendar
+    views={views}
+    localizer={localizer}
+    events={events}
+    startAccessor="start"
+    endAccessor="end"
+    defaultView="day"
+    onView={(view) => setCurrentView(view)}
+    onRangeChange={handleRangeChange}
+    onNavigate={handleRangeChange}
+    popup={true} // Enable popup for overflow events
+    popupOffset={0} // Adjust the offset as needed
+    eventOverlap="constrict" // Adjust the overlap behavior as needed
+    
+  />
+</MediaQuery>
+
+
+
+{/* Calendar View for Mobile */}
+
+<MediaQuery maxWidth={1000} minWidth={700}>
   <Calendar
     views={views}
     localizer={localizer}
@@ -184,7 +218,6 @@ const Roster = ({ shifts, employees }) => {
     popup={true} // Enable popup for overflow events
     popupOffset={0} // Adjust the offset as needed
     eventOverlap="constrict" // Adjust the overlap behavior as needed
-    maxEventSlots= {2}
   />
 </MediaQuery>
 

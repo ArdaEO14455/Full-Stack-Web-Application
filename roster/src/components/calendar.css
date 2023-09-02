@@ -25,3 +25,15 @@
     -ms-overflow-style: none; /* IE and Edge */
     scrollbar-width: none; /* Firefox */
   }
+
+  .rbc-off-range-bg {
+    background-color: #88c9f5;
+  }
+
+  .rbc-calendar {
+    background-color: #88c9f5;
+  }
+
+  .rbc-today {
+    background-color: #0092ff;
+  }

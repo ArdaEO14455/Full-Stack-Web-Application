@@ -10,17 +10,16 @@ const ViewEmployee = ({ employee, shifts }) => {
     navigate(`/${shiftId}`)
   }
   return (
-    <div>
+    <div className="p-3 h-100 bg-primary bg-opacity-50">
       {employee ? (
         <div>
-          <h2>{employee.name}'s Shifts:</h2>
+          <h1 className="text-center">{employee.name}'s Shifts:</h1>
           {employeeShifts.map((shift, index) => (
-            <div key={index}>
-              <h4> Date: {shift.startDate} - {shift.endDate}<br /></h4>
-              <h5>Start Time: {moment(`${shift.date} ${shift.start}`, 'DD-MM-YYYY HH:mm').format('HH:mm')} <br /></h5>
-              <h5>End Time: {moment(`${shift.date} ${shift.end}`, 'DD-MM-YYYY HH:mm').format('HH:mm')} <br /></h5>
-              <h5>Break: {shift.pause} minutes</h5>
-              <button type="button" onClick={() => goToEditShift(shift._id)} style={{ color: 'black' }} className="btn btn-primary mt-3 container-lg">Edit Shift</button>
+            <div key={index} type="button" onClick={() => goToEditShift(shift._id)} className="m-3 row btn btn-outline-info d-lg-flex justify-content-between text-dark col border-end border-dark">
+              <h5 className='col fw-bold'> Date: <br /> {shift.startDate}</h5>
+              <h5 className='col'>Start Time: <br />{shift.startTime} </h5>
+              <h5 className='col'>End Time: <br />{shift.endTime}</h5>
+              <h5 className='col'>Break: <br />{shift.pause} minutes</h5>
             </div>
           ))}
         </div>
