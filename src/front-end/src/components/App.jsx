@@ -23,7 +23,7 @@ const App = () => {
   // fetching the 
   useEffect(() => {
     (async () => {
-      const res = await fetch("http://localhost:4001/employees")
+      const res = await fetch(`${import.meta.env.VITE_API_HOST}/employees`)
       const data = await res.json()
       setEmployees(data)
     })()
@@ -32,7 +32,7 @@ const App = () => {
   // Employee Creation
   const addEmployee = async (newEmployee) => {
     try {
-        const response = await fetch('http://localhost:4001/employees', {
+        const response = await fetch(`${import.meta.env.VITE_API_HOST}/employees`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -58,7 +58,7 @@ const App = () => {
   // Employee Updating
   const updateEmployee = async (employeeId, updatedEmployee) => {
     try {
-      const response = await fetch(`http://localhost:4001/employees/${employeeId}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_HOST}/employees/${employeeId}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -90,7 +90,7 @@ const App = () => {
       return 
     }
     try {
-      const response = await fetch(`http://localhost:4001/employees/${employeeId}`, {
+      const response = await fetch(`${import.meta.env.VITE_API_HOST}/employees/${employeeId}`, {
         method: 'DELETE',
       })
       if (userConfirmed) {
@@ -113,7 +113,7 @@ const App = () => {
 
   useEffect(() => {
     (async () => {
-      const res = await fetch("http://localhost:4001/")
+      const res = await fetch(`${import.meta.env.VITE_API_HOST}/`)
       const data = await res.json()
       setShifts(data)
     })()
@@ -133,7 +133,7 @@ function ShowShiftWrapper() {
     
     // Add a new entry
     const newShift = { employee, startDate, startTime, start, endDate, endTime, end, pause }
-      const returnedShift= await fetch('http://localhost:4001/new', {
+      const returnedShift= await fetch(`${import.meta.env.VITE_API_HOST}/new`, {
         method: 'POST',
         body: JSON.stringify(newShift),
         headers: { "Content-Type": "application/json" }
@@ -146,7 +146,7 @@ function ShowShiftWrapper() {
 
   // Shift Update
   async function updateShift(updatedShift) {
-    const response = await fetch(`http://localhost:4001/${updatedShift._id}`, {
+    const response = await fetch(`${import.meta.env.VITE_API_HOST}/${updatedShift._id}`, {
         method: 'PUT',
         body: JSON.stringify(updatedShift),
         headers: { "Content-Type": "application/json" }
@@ -165,10 +165,10 @@ function ShowShiftWrapper() {
     console.log(shift)
     if (window.confirm('Are you sure you want to delete this shift?')) {
       try {
-        await fetch(`http://localhost:4001/${shift._id}`, {
+        await fetch(`${import.meta.env.VITE_API_HOST}/${shift._id}`, {
           method: 'DELETE',
         })
-        setShifts([shifts])
+        setShifts((prevShifts) => prevShifts.filter((s) => s._id !== shift._id));
         toast.success("Shift Deleted")
         navigate("/")     
       } catch (error) {
