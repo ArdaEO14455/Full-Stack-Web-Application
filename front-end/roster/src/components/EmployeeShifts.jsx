@@ -3,9 +3,12 @@ import moment from 'moment'
 import { useNavigate } from 'react-router-dom'
 
 
-const ViewEmployee = ({ employee, shifts }) => {
+const EmployeeShifts = ({ employee, shifts }) => {
+  // filtering through values and matching them to the shift id 
   const employeeShifts = shifts.filter(shift => shift.employee._id === employee._id)
+  // usenavigate to redirect to the new page
   const navigate = useNavigate()
+  // using the shift id to redirect edit shift page
   const goToEditShift = (shiftId) => {
     navigate(`/${shiftId}`)
   }
@@ -31,6 +34,4 @@ const ViewEmployee = ({ employee, shifts }) => {
   )
 }
 
-export default ViewEmployee
-
-
+export default EmployeeShifts

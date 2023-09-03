@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
 
+// passing employee, updateEmployee, id, handleDelete to the component
 const UpdateEmployee = ({ employee, updateEmployee, id, handleDelete} ) => {
 
+  // setting the state of each property to the original value
   const [name, setName] = useState(employee.name)
   const [email, setEmail] = useState(employee.email)
   const [phone, setPhone] = useState(employee.phone)
@@ -9,16 +11,17 @@ const UpdateEmployee = ({ employee, updateEmployee, id, handleDelete} ) => {
   const [wage, setWage] = useState(employee.wage)
   const [contract, setContract] = useState(employee.contract)
 
-
-
+// on submit
   const submit = (e) => {
     e.preventDefault()
+    // convert the outcoming data to the appropriate format for the backend
     const convertDateToBackendFormat = (dateStr) => {
       const [day, month, year] = dateStr.split("-")
       return `${year}-${month}-${day}`
-    }    
+    }
+    // if the dob was specified, convert it, otherwise send null instead
     const formattedDOB = dob ? convertDateToBackendFormat(dob) : null
-
+    // setting the employee object with new data
     const updatedEmployee = {
       name,
       dob: formattedDOB,
@@ -31,12 +34,13 @@ const UpdateEmployee = ({ employee, updateEmployee, id, handleDelete} ) => {
   updateEmployee(id, updatedEmployee)
     
   }
-  
+  // when delete buttong is clicked
   const onDeleteClick = (e) => {
     e.preventDefault()
+    // use the handledelete function to remove the employee
     handleDelete(id)
     }
-  
+// formatting the date of birth string 
 const handleDOBInputChange = (value) => {
   if (value.length === 2 || value.length === 5) {
     setDob(value + '-')
@@ -44,7 +48,9 @@ const handleDOBInputChange = (value) => {
     setDob(value)
   }
 }
+// if employee exists
   return employee ? ( 
+  // return the form 
   <>
     <h1 className="row justify-content-center"
       >{employee.name} Details</h1>

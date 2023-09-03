@@ -1,16 +1,18 @@
 import React from 'react'
 import { render, fireEvent  } from '@testing-library/react'
 import { describe, expect } from 'vitest'
-import ViewEmployee from '../components/ViewEmployee.jsx'
+import EmployeeShifts from '../components/EmployeeShifts.jsx'
 import { MemoryRouter } from 'react-router-dom'
 import '@testing-library/jest-dom'
 
-describe('ViewEmployee Component', () => {
+describe('EmployeeShifts Component', () => {
   let container
   
     const newEmployee = {
         name: "John Doe",
-        _id: "12345"
+        _id: "12345",
+        wage: 26,
+        contract: "Casual"
     }
     
     const newShifts = [{
@@ -20,13 +22,13 @@ describe('ViewEmployee Component', () => {
         end: "17:00",
         pause: 30,
         _id: "98765",
-        employee: { _id: "12345" }
+        employee: newEmployee
     }]
 
   beforeEach(() => {
     container = render(
       <MemoryRouter>
-        <ViewEmployee employee={newEmployee} shifts={newShifts}/>
+        <EmployeeShifts employee={newEmployee} shifts={newShifts}/>
       </MemoryRouter>
     ).container
   })

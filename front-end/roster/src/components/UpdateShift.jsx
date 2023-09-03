@@ -39,7 +39,6 @@ const UpdateShift = ({ shift, updateShift, employees, deleteShift }) => {
     deleteShift(shift)
   }
 
-
   return shift ? (
     <>
       <h5> Employee: {shift.employee.name}</h5>
@@ -84,7 +83,6 @@ const UpdateShift = ({ shift, updateShift, employees, deleteShift }) => {
           type="time"
           required
         />
-
         {/* Shift End Fields */}
         {/* End Date */}
         <label htmlFor="endTimeInput" className="form-label">
@@ -107,7 +105,6 @@ const UpdateShift = ({ shift, updateShift, employees, deleteShift }) => {
           type="time"
           required
         />
-
         {/* Break Field */}
         <label htmlFor="exampleFormControlInput1" className="form-label">
           Break (mins)
@@ -121,7 +118,6 @@ const UpdateShift = ({ shift, updateShift, employees, deleteShift }) => {
           min = "0"
           aria-label=".form-control-sm example"
         />
-
         {/* Submit Button */}
         <button type="submit" className="btn btn-primary mt-3 container-lg">
           Update Shift
@@ -130,9 +126,7 @@ const UpdateShift = ({ shift, updateShift, employees, deleteShift }) => {
         <button onClick={shiftDelete} className="btn btn-danger mt-3 container-lg" align="center">
           Delete Shift
         </button> 
-      </form>
-      
-           
+      </form>         
     </>
   ) : (
     <h4>Shift not found</h4>
