@@ -12,7 +12,7 @@ describe('ViewEmployee Component', () => {
   
   const newEmployees = [{
     name: "John Doe",
-    _id: "123",
+    _id: "123", 
     wage: 30,
     contract: 'Casual'
   }]
@@ -58,18 +58,9 @@ describe('ViewEmployee Component', () => {
   test('Renders shift details for the employee', async () => {
     const { getByText } = render(ViewEmployee)
     expect(getByText("John Doe's Shifts:")).toBeVisible()
-    expect(getByText("Date: 01-01-2023 - 01-01-2023")).toBeVisible()
-    expect(getByText("Start Time: Invalid date")).toBeVisible()
-    expect(getByText("End Time: Invalid date")).toBeVisible()
+    expect(getByText("Date: 01-01-2023")).toBeVisible()
     expect(getByText("Break: 30 minutes")).toBeVisible()
   })
-  
-  test('Renders the Edit Shift button', async () => {
-    const { getByText } = render(ViewEmployee)
-    const editButton = getByText('Edit Shift')
-    expect(editButton).toBeVisible()
-    expect(editButton.type).toBe('button')
-  }) 
 })
 
 

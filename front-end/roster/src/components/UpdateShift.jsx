@@ -41,28 +41,23 @@ const UpdateShift = ({ shift, updateShift, employees, deleteShift }) => {
 
   return shift ? (
     <>
-      <h5> Employee: {shift.employee.name}</h5>
-      <h5> Date: {shift.startDate}</h5>
-      <h4> Shift Start: {shift.startTime} </h4>
-      <h4> Shift End: {shift.endTime} </h4>
-      <h4> Break: {shift.pause} </h4>
+    <div className="vh-100 bg-primary bg-opacity-50">
 
-      <h1 className="row justify-content-center">Edit Shift</h1>
+      <h1 className="p-4 row justify-content-center">Edit Shift</h1>
       <form className="container" onSubmit={submit}>
         {/* Employee Field */}
-        <select className="d-block form-select" required value={employee._id} onChange={event => {
+        <select className="d-block form-select bg-primary-subtle text-center" required value={employee._id} onChange={event => {
     const selectedEmployee = employees.find(emp => emp._id === event.target.value)
     setEmployee(selectedEmployee)}}>
         {
           employees.map((employee) => {
-            return <option key={employee._id} value={employee._id}>{employee.name}</option>
-            
+            return <option key={employee._id} value={employee._id}>{employee.name}</option>        
           })
         }
       </select>
 
         {/* Shift Start */}
-        <label htmlFor="startTimeInput" className="form-label">
+        <label htmlFor="startTimeInput" className="h4 row justify-content-center mt-1 form-label text-decoration-underline fw-bold">
           Shift Start
         </label>
         {/* Start Date */}
@@ -70,7 +65,7 @@ const UpdateShift = ({ shift, updateShift, employees, deleteShift }) => {
           id="dateInput"
           value={startDate}
           onChange={(e) => setStartDate(e.target.value)}
-          className="form-control"
+          className="form-control bg-primary-subtle text-center"
           type="date"
           required
         />
@@ -79,20 +74,20 @@ const UpdateShift = ({ shift, updateShift, employees, deleteShift }) => {
           id="startTimeInput"
           value={startTime}
           onChange={(e) => setStartTime(e.target.value)}
-          className="form-control form-control-sm"
+          className="form-control bg-primary-subtle text-center"
           type="time"
           required
         />
         {/* Shift End Fields */}
         {/* End Date */}
-        <label htmlFor="endTimeInput" className="form-label">
+        <label htmlFor="endTimeInput" className="h4 row justify-content-center mt-1 form-label text-decoration-underline fw-bold">
           Shift End
         </label>
         <input
           id="dateInput"
           value={endDate}
           onChange={(e) => setEndDate(e.target.value)}
-          className="form-control"
+          className="form-control bg-primary-subtle text-center"
           type="date"
           required
         />
@@ -101,18 +96,18 @@ const UpdateShift = ({ shift, updateShift, employees, deleteShift }) => {
           id="endTimeInput"
           value={endTime}
           onChange={(e) => setEndTime(e.target.value)}
-          className="form-control form-control-sm"
+          className="form-control bg-primary-subtle text-center"
           type="time"
           required
         />
         {/* Break Field */}
-        <label htmlFor="exampleFormControlInput1" className="form-label">
+        <label htmlFor="exampleFormControlInput1" className="h4 row justify-content-center mt-1 form-label text-decoration-underline fw-bold">
           Break (mins)
         </label>
         <input
           value={pause}
           onChange={(e) => setPause(e.target.value)}
-          className="form-control form-control-sm"
+          className="form-control bg-primary-subtle text-center"
           type="number"
           placeholder="E.g. 30"
           min = "0"
@@ -126,7 +121,8 @@ const UpdateShift = ({ shift, updateShift, employees, deleteShift }) => {
         <button onClick={shiftDelete} className="btn btn-danger mt-3 container-lg" align="center">
           Delete Shift
         </button> 
-      </form>         
+      </form>  
+      </div>       
     </>
   ) : (
     <h4>Shift not found</h4>

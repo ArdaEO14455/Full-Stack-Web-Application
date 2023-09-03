@@ -52,17 +52,18 @@ const handleDOBInputChange = (value) => {
   return employee ? ( 
   // return the form 
   <>
-    <h1 className="row justify-content-center"
+  <div className="h-100 bg-primary bg-opacity-50">
+    <h1 className="p-3 row justify-content-center"
       >{employee.name} Details</h1>
       <form className="container" 
       onSubmit={submit}
       >
         {/* Name*/}
-      <label htmlFor="exampleFormControlInput1" className="form-label">Employee Name</label>
+      <label htmlFor="exampleFormControlInput1" className="h4 row justify-content-center mt-1 form-label text-decoration-underline fw-bold">Employee Name</label>
         <input 
         value= {name}
         onChange= {e => setName(e.target.value)} 
-        className="form-control form-control-lg" 
+        className="form-control form-control-sm bg-primary-subtle text-center" 
         type="text" 
         placeholder="John Doe" 
         aria-label=".form-control-lg example" 
@@ -70,53 +71,53 @@ const handleDOBInputChange = (value) => {
           />
           
         {/* Email */}
-      <label htmlFor="emailInput" className="form-label">Email</label>
+      <label htmlFor="emailInput" className="h4 row justify-content-center mt-1 form-label text-decoration-underline fw-bold">Email</label>
       <input
         id="emailInput"
         value={email}
         onChange={e => setEmail(e.target.value)}
-        className="form-control"
+        className="form-control form-control-sm bg-primary-subtle text-center"
         type="text"
           />
 
         {/* Phone */}
-      <label htmlFor="phoneInput" className="form-label">Phone</label>
+      <label htmlFor="phoneInput" className="h4 row justify-content-center mt-1 form-label text-decoration-underline fw-bold">Phone</label>
       <input
         id="phoneInput"
         value={phone}
         onChange={e => setPhone(e.target.value)}
-        className="form-control"
+        className="form-control form-control-sm bg-primary-subtle text-center"
         type="tel"
         />
 
         {/* Date of Birth */}
-      <label htmlFor="dobInput" className="form-label">Date of Birth</label>
+      <label htmlFor="dobInput" className="h4 row justify-content-center mt-1 form-label text-decoration-underline fw-bold">Date of Birth</label>
       <input
           id="dobInput"
           value={dob}
           onChange={e => handleDOBInputChange(e.target.value)}
-          className="form-control form-control-sm"
+          className="form-control form-control-sm bg-primary-subtle text-center"
           type="text"
           placeholder = "dd-MM-yyyy"
         />
 
         {/* Break Field */}
-      <label htmlFor="exampleFormControlInput1" className="form-label">Wage</label>
+      <label htmlFor="exampleFormControlInput1" className="h4 row justify-content-center mt-1 form-label text-decoration-underline fw-bold">Wage</label>
         <input 
           value={wage} 
           onChange= {e => setWage(e.target.value)} 
-          className="form-control form-control-sm" 
+          className="form-control form-control-sm bg-primary-subtle text-center" 
           type="number" 
           placeholder="E.g. 30" 
           aria-label=".form-control-sm example" 
           />
 
-      <label htmlFor="contractInput" className="form-label">Contract</label>
+      <label htmlFor="contractInput" className="h4 row justify-content-center mt-1 form-label text-decoration-underline fw-bold">Contract</label>
         <select
           id="contractInput"
           value={contract}
           onChange={e => setContract(e.target.value)}
-          className="form-control form-control-sm"
+          className="form-control form-control-sm bg-primary-subtle text-center"
           required
         >
           <option value="" disabled>Select a contract type</option>
@@ -128,6 +129,7 @@ const handleDOBInputChange = (value) => {
         <button type="submit" style = {{ color: 'black'}} className="btn btn-primary mt-3 container-lg">Update Employee Details</button>
         <button  type="button" onClick={ onDeleteClick } style = {{ backgroundColor: 'red', color: 'black'}} className="btn btn-primary mt-3 container-lg">Delete Employee</button>
       </form>
+      </div>
     </>) : (
     <h4>Employee not Found!</h4>
   )

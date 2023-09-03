@@ -12,7 +12,7 @@ function ViewEmployee({ employees, shifts, updateEmployee, handleDelete, employe
   
   return selectedEmployee 
     ? (<>
-      <div className="container-fluid">
+      <div className="vh-100 bg-primary bg-opacity-50 container-fluid">
       <div className="row">
         <div className="col-md-6">
           <UpdateEmployee 

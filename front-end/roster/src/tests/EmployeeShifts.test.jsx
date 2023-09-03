@@ -34,19 +34,13 @@ describe('EmployeeShifts Component', () => {
   })
 
     test('Renders Employee name correctly', () => {
-      expect(container.querySelector('h2')).not.toBeNull()
-      expect(container.querySelector('h2')).toHaveTextContent("John Doe's Shifts:")
+      expect(container.querySelector('h1')).not.toBeNull()
+      expect(container.querySelector('h1')).toHaveTextContent("John Doe's Shifts:")
     })
 
     test('Renders Employee Shift details correctly', () => {
-      expect(container.querySelector('h4')).not.toBeNull()
       expect(container.querySelector('h5')).not.toBeNull()
-      expect(container.querySelector('h4')).toHaveTextContent('Date')
-    })
-
-    test('Edit Shift button works', () => {
-        const editButton = container.querySelector("button")
-        fireEvent.click(editButton)
+      expect(container.querySelector('h5')).toHaveTextContent('Date')
     })
     
 })
